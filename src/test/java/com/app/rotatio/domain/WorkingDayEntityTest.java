@@ -67,9 +67,9 @@ class WorkingDayEntityTest {
             workingDayRepository.save(workingDay);
             //Then
             WorkingDay foundWorkingDay = workingDayRepository.findById(workingDay.getId()).orElseThrow();
-            assertEquals(LocalDate.of(2024,8,11), foundWorkingDay.getCreated());
-            assertEquals(LocalDate.of(2024,8,12), foundWorkingDay.getExecuteDate());
-            assertTrue(foundWorkingDay.getPlanned());
+            assertEquals(LocalDate.now().plusDays(1), foundWorkingDay.getCreated());
+            assertEquals(LocalDate.now().plusDays(2), foundWorkingDay.getExecuteDate());
+            assertTrue(foundWorkingDay.isPlanned());
         }
 
         @Test
@@ -104,7 +104,7 @@ class WorkingDayEntityTest {
                 Optional<WorkingDay> workingDayById = workingDayRepository.findById(workingDayId);
                 //Then
                 assertTrue(workingDayById.isPresent());
-                assertEquals(LocalDate.of(2024, 8, 10), workingDayById.get().getCreated());
+                assertEquals(LocalDate.now(), workingDayById.get().getCreated());
             }
 
             @Test
@@ -132,7 +132,7 @@ class WorkingDayEntityTest {
                 //Then
                 assertEquals(1, byPlanned.size());
                 assertFalse(byPlanned.contains(secondWorkingDay));
-                assertEquals(LocalDate.of(2024, 8, 10), byPlanned.get(0).getCreated());
+                assertEquals(LocalDate.now(), byPlanned.get(0).getCreated());
             }
 
             @Test

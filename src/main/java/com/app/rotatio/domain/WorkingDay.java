@@ -30,7 +30,7 @@ public class WorkingDay {
     private LocalDate executeDate;
 
     @Column(name = "PLANNED")
-    private Boolean planned;
+    private boolean planned;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")

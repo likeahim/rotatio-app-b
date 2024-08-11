@@ -194,7 +194,7 @@ public class UserEntityTests {
             //Then
             List<WorkingDay> plannedDays = byId.get().getPlannedDays();
             assertFalse(plannedDays.isEmpty());
-            assertFalse(plannedDays.get(0).getPlanned());
+            assertFalse(plannedDays.get(0).isPlanned());
         }
     }
 }
