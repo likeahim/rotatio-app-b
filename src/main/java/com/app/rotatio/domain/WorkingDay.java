@@ -3,6 +3,7 @@ package com.app.rotatio.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,8 @@ public class WorkingDay {
     @Column(name = "WORKING_DAY_ID")
     private Long id;
 
-    @Column(name = "CREATED", nullable = false)
+    @NotNull
+    @Column(name = "CREATED")
     private LocalDate created;
 
     @Column(name = "EXECUTE_DATE")

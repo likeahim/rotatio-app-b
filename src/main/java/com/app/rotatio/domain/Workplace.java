@@ -26,10 +26,10 @@ public class Workplace extends ListItem {
     private String designation;
 
     @Column(name = "IS_ACTIVE")
-    private boolean isActive;
+    private boolean active;
 
     @Column(name = "IS_NOW_USED")
-    private boolean isNowUsed;
+    private boolean nowUsed;
 
     @ManyToOne
     @JoinColumn(name = "TASK_ID")
@@ -40,7 +40,6 @@ public class Workplace extends ListItem {
     private WorkingDay workingDay;
 
     @Builder.Default
-    @OneToMany(mappedBy = "workplace", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "workplace", fetch = FetchType.EAGER)
     private List<Worker> workers = new ArrayList<>();
-
 }
