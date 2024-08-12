@@ -1,5 +1,6 @@
 package com.app.rotatio.service;
 
+import com.app.rotatio.controller.exception.WorkingDayNotFoundException;
 import com.app.rotatio.domain.*;
 import com.app.rotatio.repository.WorkingDayRepository;
 import com.app.rotatio.service.strategy.*;
@@ -16,46 +17,50 @@ import java.util.List;
 public class WorkingDayService {
 
     @Autowired
-    private WorkingDayRepository workingDayRepository;
+    private final WorkingDayRepository workingDayRepository;
     @Autowired
-    private StrategyService strategyService;
+    private final StrategyService strategyService;
 
-    public WorkingDay save(WorkingDay workingDay) {
+    public WorkingDay saveWorkingDay(final WorkingDay workingDay) {
         return workingDayRepository.save(workingDay);
     }
 
-    public void delete(WorkingDay workingDay) {
+    public void delete(final WorkingDay workingDay) {
         workingDayRepository.delete(workingDay);
+    }
+
+    public WorkingDay getWorkingDayById(final Long id) throws WorkingDayNotFoundException {
+        return workingDayRepository.findById(id).orElseThrow(WorkingDayNotFoundException::new);
     }
 
     public List<WorkingDay> getAllWorkingDays() {
         return workingDayRepository.findAll();
     }
 
-    public List<WorkingDay> fetchByUser(User user) {
+    public List<WorkingDay> getAllByUser(final User user) {
         return workingDayRepository.findByUser(user);
     }
 
-    public List<WorkingDay> fetchByPlanned(boolean planned) {
+    public List<WorkingDay> getAllByPlanned(final boolean planned) {
         return workingDayRepository.findByPlanned(planned);
     }
 
-    public List<WorkingDay> fetchByArchived(boolean archived) {
+    public List<WorkingDay> getAllByArchived(final boolean archived) {
         return workingDayRepository.findByArchived(archived);
     }
 
-    public List<WorkingDay> fetchByExecuteDateBefore(LocalDate date) {
+    public List<WorkingDay> getAllByExecuteDateBefore(final LocalDate date) {
         return workingDayRepository.findByExecuteDateBefore(date);
     }
 
-    public<T extends ListItem> void addItemToList(WorkingDay workingDay, T item) {
+    public<T extends ListItem> void addItemToList(final WorkingDay workingDay, final T item) {
         strategyService.addItemToWorkingDay(workingDay, item);
-        save(workingDay);
+        saveWorkingDay(workingDay);
     }
 
-    public <T extends ListItem> void removeItemFromList(WorkingDay workingDay, T item) {
+    public <T extends ListItem> void removeItemFromList(final WorkingDay workingDay, final T item) {
         strategyService.removeItemFromWorkingDay(workingDay, item);
-        save(workingDay);
+        saveWorkingDay(workingDay);
     }
 
     public void deleteAll() {

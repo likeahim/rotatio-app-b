@@ -89,7 +89,7 @@ class WorkingDayStrategyTests {
         //Given
         //When
         workingDayService.addItemToList(workingDay, workplace);
-        workingDayService.save(workingDay);
+        workingDayService.saveWorkingDay(workingDay);
         //Then
         assertNotNull(workplace.getWorkingDay());
     }
@@ -101,7 +101,7 @@ class WorkingDayStrategyTests {
         workingDayService.addItemToList(workingDay, task);
         //When
         workingDayService.removeItemFromList(workingDay, task);
-        workingDayService.save(workingDay);
+        workingDayService.saveWorkingDay(workingDay);
         //Then
         assertNull(task.getWorkingDay());
         assertNotNull(workplace.getWorkingDay());
@@ -112,7 +112,7 @@ class WorkingDayStrategyTests {
         //Given
         workingDayService.addItemToList(workingDay, workplace);
         //When
-        workingDayService.save(workingDay);
+        workingDayService.saveWorkingDay(workingDay);
         //Then
         Long workplaceId = workplace.getId();
         assertNotNull(workplaceId);
@@ -122,11 +122,11 @@ class WorkingDayStrategyTests {
     void shouldNotDeleteItemByRemovingFromWorkingDay() {
         //Given
         workingDayService.addItemToList(workingDay, task);
-        workingDayService.save(workingDay);
+        workingDayService.saveWorkingDay(workingDay);
         Long taskId = task.getId();
         //When
         workingDayService.removeItemFromList(workingDay, task);
-        workingDayService.save(workingDay);
+        workingDayService.saveWorkingDay(workingDay);
         //Then
         assertNotNull(taskId);
         Optional<Task> taskById = taskRepository.findById(taskId);

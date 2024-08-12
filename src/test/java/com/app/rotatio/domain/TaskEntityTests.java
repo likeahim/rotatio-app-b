@@ -184,20 +184,6 @@ class TaskEntityTests {
         }
 
         @Test
-        void shouldFetchTaskByWorkingDay() {
-            //Given
-            taskRepository.save(task);
-            Long taskId = task.getId();
-            WorkingDay savedWorkingDay = task.getWorkingDay();
-            //When
-            Task taskByWorkingDay = taskRepository.findByWorkingDay(savedWorkingDay).orElseThrow();
-            //Then
-            assertEquals(taskId, taskByWorkingDay.getId());
-            assertNotNull(taskByWorkingDay);
-            assertNotNull(taskByWorkingDay.getWorkingDay());
-        }
-
-        @Test
         void shouldFetchTasksListByWorkingDay() {
             //Given
             Task anotherTask = Task.builder()

@@ -14,6 +14,5 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     Optional<Task> findByName(String name);
-    Optional<Task> findByWorkingDay(WorkingDay workingDay);
     List<Task> findAllByWorkingDay(WorkingDay workingDay);
 }

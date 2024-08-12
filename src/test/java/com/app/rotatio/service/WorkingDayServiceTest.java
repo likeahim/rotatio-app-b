@@ -1,10 +1,7 @@
 package com.app.rotatio.service;
 
 import com.app.rotatio.domain.*;
-import com.app.rotatio.repository.UserRepository;
 import com.app.rotatio.repository.WorkingDayRepository;
-import com.app.rotatio.service.strategy.StrategyService;
-import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,7 +46,7 @@ class WorkingDayServiceTest {
         savedWorkingDay.setId(10L);
         when(workingDayRepository.save(workingDay)).thenReturn(savedWorkingDay);
         //When
-        WorkingDay saved = workingDayService.save(workingDay);
+        WorkingDay saved = workingDayService.saveWorkingDay(workingDay);
         //Then
         assertEquals(10L, saved.getId());
         verify(workingDayRepository).save(workingDay);
@@ -58,7 +55,7 @@ class WorkingDayServiceTest {
     @Test
     void shouldDeleteWorkingDay() {
         //Given
-        workingDayService.save(workingDay);
+        workingDayService.saveWorkingDay(workingDay);
         //When
         workingDayService.delete(workingDay);
         //Then
@@ -68,7 +65,7 @@ class WorkingDayServiceTest {
     @Test
     void shouldFetchAllWorkingDays() {
         //Given
-        workingDayService.save(workingDay);
+        workingDayService.saveWorkingDay(workingDay);
         List<WorkingDay> workingDays = List.of(workingDay);
         when(workingDayRepository.findAll()).thenReturn(workingDays);
         //When
@@ -90,7 +87,7 @@ class WorkingDayServiceTest {
         workingDay.setUser(user);
         when(workingDayRepository.findByUser(user)).thenReturn(List.of(workingDay));
         //When
-        List<WorkingDay> workingDays = workingDayService.fetchByUser(user);
+        List<WorkingDay> workingDays = workingDayService.getAllByUser(user);
         //Then
         verify(workingDayRepository).findByUser(user);
         assertEquals(1, workingDays.size());
@@ -106,8 +103,8 @@ class WorkingDayServiceTest {
         when(workingDayRepository.findByPlanned(true)).thenReturn(List.of(secondWorkingDay));
         when(workingDayRepository.findByPlanned(false)).thenReturn(List.of(workingDay));
         //When
-        List<WorkingDay> plannedWorkingDays = workingDayService.fetchByPlanned(true);
-        List<WorkingDay> unplannedWorkingDays = workingDayService.fetchByPlanned(false);
+        List<WorkingDay> plannedWorkingDays = workingDayService.getAllByPlanned(true);
+        List<WorkingDay> unplannedWorkingDays = workingDayService.getAllByPlanned(false);
         //Then
         verify(workingDayRepository).findByPlanned(true);
         verify(workingDayRepository).findByPlanned(false);
@@ -122,7 +119,7 @@ class WorkingDayServiceTest {
         LocalDate execute = LocalDate.now().plusDays(2);
         when(workingDayRepository.findByExecuteDateBefore(execute)).thenReturn(List.of(workingDay));
         //When
-        List<WorkingDay> workingDays = workingDayService.fetchByExecuteDateBefore(execute);
+        List<WorkingDay> workingDays = workingDayService.getAllByExecuteDateBefore(execute);
         //Then
         verify(workingDayRepository).findByExecuteDateBefore(execute);
         assertEquals(1, workingDays.size());
@@ -135,8 +132,8 @@ class WorkingDayServiceTest {
         when(workingDayRepository.findByArchived(true)).thenReturn(List.of(workingDay));
         when(workingDayRepository.findByArchived(false)).thenReturn(new ArrayList<>());
         //When
-        List<WorkingDay> archived = workingDayService.fetchByArchived(true);
-        List<WorkingDay> notArchived = workingDayService.fetchByArchived(false);
+        List<WorkingDay> archived = workingDayService.getAllByArchived(true);
+        List<WorkingDay> notArchived = workingDayService.getAllByArchived(false);
         //Then
         assertEquals(1, archived.size());
         assertEquals(0, notArchived.size());
