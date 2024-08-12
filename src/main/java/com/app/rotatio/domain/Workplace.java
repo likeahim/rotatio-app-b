@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,4 +43,18 @@ public class Workplace extends ListItem {
     @Builder.Default
     @OneToMany(mappedBy = "workplace", fetch = FetchType.EAGER)
     private List<Worker> workers = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Workplace workplace = (Workplace) o;
+        return Objects.equals(id, workplace.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), id);
+    }
 }

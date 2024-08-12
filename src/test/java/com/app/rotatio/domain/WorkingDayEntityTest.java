@@ -136,6 +136,33 @@ class WorkingDayEntityTest {
             }
 
             @Test
+            void shouldFetchAllWorkingDaysByArchived() {
+                //Given
+                workingDay.setArchived(true);
+                secondWorkingDay.setArchived(true);
+                workingDayRepository.save(workingDay);
+                workingDayRepository.save(secondWorkingDay);
+                //When
+                List<WorkingDay> byArchived = workingDayRepository.findByArchived(true);
+                //Then
+                assertEquals(2, byArchived.size());
+                assertTrue(byArchived.contains(secondWorkingDay));
+            }
+
+            @Test
+            void shouldFetchEmptyListByArchived() {
+                //Given
+                workingDayRepository.save(workingDay);
+                workingDayRepository.save(secondWorkingDay);
+                //When
+                List<WorkingDay> emptyList = workingDayRepository.findByArchived(true);
+                //Then
+                assertEquals(0, emptyList.size());
+                assertFalse(emptyList.contains(secondWorkingDay));
+                assertFalse(emptyList.contains(workingDay));
+            }
+
+            @Test
             void shouldFetchAllWorkingDaysExecutingBeforeDate() {
                 //Given
                 LocalDate executeDate = LocalDate.now().minusDays(4);

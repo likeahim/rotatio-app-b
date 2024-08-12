@@ -32,6 +32,9 @@ public class WorkingDay {
     @Column(name = "PLANNED")
     private boolean planned;
 
+    @Column(name = "ARCHIVED")
+    private boolean archived;
+
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;

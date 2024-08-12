@@ -14,6 +14,7 @@ import java.util.List;
 public interface WorkingDayRepository extends JpaRepository<WorkingDay, Long> {
 
     List<WorkingDay> findByUser(User user);
-    List<WorkingDay> findByPlanned(Boolean planned);
+    List<WorkingDay> findByPlanned(boolean planned);
     List<WorkingDay> findByExecuteDateBefore(LocalDate date);
+    List<WorkingDay> findByArchived(boolean archived);
 }
