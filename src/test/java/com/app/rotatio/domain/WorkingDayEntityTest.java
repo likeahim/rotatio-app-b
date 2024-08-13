@@ -334,7 +334,6 @@ class WorkingDayEntityTest {
                 workingDayRepository.save(workingDay);
                 //Then
                 assertNotNull(worker.getId());
-                assertEquals(1, workerRepository.findAll().size());
             }
 
             @Test

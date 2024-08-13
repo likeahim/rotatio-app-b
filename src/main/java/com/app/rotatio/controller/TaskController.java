@@ -1,11 +1,9 @@
 package com.app.rotatio.controller;
 
 import com.app.rotatio.domain.Task;
-import com.app.rotatio.domain.WorkingDay;
 import com.app.rotatio.domain.dto.TaskDto;
 import com.app.rotatio.mapper.TaskMapper;
 import com.app.rotatio.service.TaskService;
-import com.app.rotatio.service.WorkingDayService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.MediaType;
@@ -70,5 +68,12 @@ public class TaskController {
     public ResponseEntity<TaskDto> updateTask(@RequestBody TaskDto taskDto) {
         Task saved = taskService.saveTask(taskMapper.mapToTask(taskDto));
         return ResponseEntity.ok(taskMapper.mapToTaskDto(saved));
+    }
+
+    @SneakyThrows
+    @PatchMapping(value = "/updatePerformed/{taskId}/{performed}")
+    public ResponseEntity<TaskDto> updatePerformedTask(@PathVariable Long taskId, @PathVariable boolean performed) {
+        Task task = taskService.updatePerformed(taskId, performed);
+        return ResponseEntity.ok(taskMapper.mapToTaskDto(task));
     }
 }

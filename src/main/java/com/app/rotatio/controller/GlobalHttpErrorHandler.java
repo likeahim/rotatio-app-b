@@ -44,4 +44,9 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleNoArchivesForThisWorkingDayException(NoArchivesForThisWorkingDayException ex) {
         return new ResponseEntity<>("No archive found", HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(WorkerNotFoundException.class)
+    public ResponseEntity<Object> handleWorkerNotFoundException(WorkerNotFoundException ex) {
+        return new ResponseEntity<>("Worker not found", HttpStatus.NOT_FOUND);
+    }
 }

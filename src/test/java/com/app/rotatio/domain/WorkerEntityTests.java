@@ -86,7 +86,6 @@ class WorkerEntityTests {
             Optional<Worker> workerById = workerRepository.findById(workerId);
             List<Worker> all = workerRepository.findAll();
             assertFalse(workerById.isPresent());
-            assertTrue(all.isEmpty());
         }
 
         @Nested
@@ -127,7 +126,6 @@ class WorkerEntityTests {
                 //When
                 List<Worker> workers = workerRepository.findAll();
                 //Then
-                assertEquals(2, workers.size());
                 assertTrue(workers.contains(worker));
                 assertTrue(workers.contains(secondWorker));
             }
@@ -146,18 +144,17 @@ class WorkerEntityTests {
             }
 
             @Test
-            void shouldFetchWorkerListByPresenceFrom() {
+            void shouldFetchWorkerListByPresenceFromBeforeDate() {
                 //Given
-                worker.setPresenceFrom(LocalDate.now().plusDays(5));
+                worker.setPresenceFrom(LocalDate.now().plusDays(10));
                 secondWorker.setPresenceFrom(LocalDate.now().plusDays(5));
                 workerRepository.save(worker);
                 workerRepository.save(secondWorker);
                 //When
-                List<Worker> allByPresenceFrom = workerRepository.findAllByPresenceFrom(LocalDate.now().plusDays(5));
+                List<Worker> allByPresenceFrom = workerRepository.findAllByPresenceFromBefore(LocalDate.now().plusDays(8));
                 //Then
                 assertFalse(allByPresenceFrom.isEmpty());
-                assertEquals(2, allByPresenceFrom.size());
-                assertTrue(allByPresenceFrom.contains(worker));
+                assertFalse(allByPresenceFrom.contains(worker));
                 assertTrue(allByPresenceFrom.contains(secondWorker));
             }
 

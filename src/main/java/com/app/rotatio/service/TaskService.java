@@ -39,6 +39,12 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
+    public Task updatePerformed(final Long id, final boolean performed) throws TaskNotFoundException {
+        Task taskById = getTaskById(id);
+        taskById.setPerformed(performed);
+        return taskRepository.save(taskById);
+    }
+
     public Task getTaskById(final long id) throws TaskNotFoundException {
         return taskRepository.findById(id).orElseThrow(TaskNotFoundException::new);
     }
