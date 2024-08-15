@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -56,6 +56,9 @@ public class WorkerMapper {
     }
 
     public List<WorkerDto> mapToWorkerDtoList(final List<Worker> workers) {
+        if(workers.isEmpty()) {
+            return Collections.emptyList();
+        }
         return workers.stream()
                 .map(this::mapToWorkerDto)
                 .toList();

@@ -16,5 +16,6 @@ public interface WorkingDayRepository extends JpaRepository<WorkingDay, Long> {
     List<WorkingDay> findByUser(User user);
     List<WorkingDay> findByPlanned(boolean planned);
     List<WorkingDay> findByExecuteDateBefore(LocalDate date);
-    List<WorkingDay> findByArchived(boolean archived);
+    WorkingDay findByExecuteDate(LocalDate date);
+    boolean existsByExecuteDate(LocalDate date);
 }

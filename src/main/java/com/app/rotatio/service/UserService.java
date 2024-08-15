@@ -1,5 +1,6 @@
 package com.app.rotatio.service;
 
+import com.app.rotatio.controller.exception.UserNotFoundException;
 import com.app.rotatio.domain.User;
 import com.app.rotatio.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Optional<User> getUserById(final Long id) {
-        return userRepository.findById(id);
+    public User getUserById(final Long id) throws UserNotFoundException {
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
     public Optional<User> getUserByEmail(final String email) {

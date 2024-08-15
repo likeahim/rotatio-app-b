@@ -25,12 +25,6 @@ class WorkingDayEntityTest {
     private WorkingDayRepository workingDayRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private WorkplaceRepository workplaceRepository;
-    @Autowired
-    private TaskRepository taskRepository;
-    @Autowired
-    private WorkerRepository workerRepository;
 
     private WorkingDay workingDay;
 
@@ -136,33 +130,6 @@ class WorkingDayEntityTest {
             }
 
             @Test
-            void shouldFetchAllWorkingDaysByArchived() {
-                //Given
-                workingDay.setArchived(true);
-                secondWorkingDay.setArchived(true);
-                workingDayRepository.save(workingDay);
-                workingDayRepository.save(secondWorkingDay);
-                //When
-                List<WorkingDay> byArchived = workingDayRepository.findByArchived(true);
-                //Then
-                assertEquals(2, byArchived.size());
-                assertTrue(byArchived.contains(secondWorkingDay));
-            }
-
-            @Test
-            void shouldFetchEmptyListByArchived() {
-                //Given
-                workingDayRepository.save(workingDay);
-                workingDayRepository.save(secondWorkingDay);
-                //When
-                List<WorkingDay> emptyList = workingDayRepository.findByArchived(true);
-                //Then
-                assertEquals(0, emptyList.size());
-                assertFalse(emptyList.contains(secondWorkingDay));
-                assertFalse(emptyList.contains(workingDay));
-            }
-
-            @Test
             void shouldFetchAllWorkingDaysExecutingBeforeDate() {
                 //Given
                 LocalDate executeDate = LocalDate.now().minusDays(4);
@@ -178,19 +145,6 @@ class WorkingDayEntityTest {
                 assertEquals(2, byExecuteDateBefore.size());
                 assertTrue(byExecuteDateBefore.contains(workingDay));
                 assertTrue(byExecuteDateBefore.contains(secondWorkingDay));
-            }
-
-            @Test
-            void shouldFetchEmptyLists() {
-                //Given
-                workingDayRepository.save(workingDay);
-                Long workingDayId = workingDay.getId();
-                //When
-                WorkingDay foundWorkingDay = workingDayRepository.findById(workingDayId).orElseThrow();
-                //Then
-                assertTrue(foundWorkingDay.getTasks().isEmpty());
-                assertTrue(foundWorkingDay.getWorkers().isEmpty());
-                assertTrue(foundWorkingDay.getWorkplaces().isEmpty());
             }
         }
         @Nested
@@ -241,111 +195,6 @@ class WorkingDayEntityTest {
                 workingDayRepository.delete(workingDay);
                 //Then
                 assertTrue(userRepository.findById(user.getId()).isPresent());
-            }
-        }
-        @Nested
-        class WorkingDayAndWorkplaceRelationalTests {
-            private Workplace workplace;
-
-            @BeforeEach
-            void setUp() {
-                workplace = Workplace.builder()
-                        .designation("Test")
-                        .build();
-            }
-
-            @Test
-            void shouldFlushWorkplaceWithWorkingDay() {
-                //Given
-                workingDay.getWorkplaces().add(workplace);
-                //When
-                workingDayRepository.save(workingDay);
-                //Then
-                assertNotNull(workplace.getId());
-                assertEquals(1, workplaceRepository.findAll().size());
-            }
-
-            @Test
-            void shouldNotDeleteWorkplace() {
-                //Given
-                workingDay.getWorkplaces().add(workplace);
-                workingDayRepository.save(workingDay);
-                //When
-                workingDayRepository.delete(workingDay);
-                //Then
-                assertNotNull(workplace.getId());
-                assertFalse(workplaceRepository.findAll().isEmpty());
-            }
-        }
-        @Nested
-        class WorkingDayAndTaskRelationalTests {
-            private Task task;
-
-            @BeforeEach
-            void setUp() {
-                task = Task.builder()
-                        .name("Testing")
-                        .build();
-            }
-
-            @Test
-            void shouldFlushTask() {
-                //Given
-                workingDay.getTasks().add(task);
-                //When
-                workingDayRepository.save(workingDay);
-                //Then
-                assertNotNull(task.getId());
-                assertEquals(1, taskRepository.findAll().size());
-            }
-
-            @Test
-            void shouldNotDeleteTask() {
-                //Given
-                workingDay.getTasks().add(task);
-                workingDayRepository.save(workingDay);
-                //When
-                workingDayRepository.delete(workingDay);
-                //Then
-                assertNotNull(task.getId());
-                assertFalse(taskRepository.findAll().isEmpty());
-            }
-        }
-
-        @Nested
-        class WorkingDayAndWorkerRelationalTests {
-            private Worker worker;
-
-            @BeforeEach
-            void setUp() {
-                worker = Worker.builder()
-                        .workerNumber(752410L)
-                        .firstName("John")
-                        .lastName("Worker")
-                        .status(WorkerStatus.PRESENT)
-                        .build();
-            }
-
-            @Test
-            void shouldFlushWorkerWithWorkingDay() {
-                //Given
-                workingDay.getWorkers().add(worker);
-                //When
-                workingDayRepository.save(workingDay);
-                //Then
-                assertNotNull(worker.getId());
-            }
-
-            @Test
-            void shouldNotDeleteWorker() {
-                //Given
-                workingDay.getWorkers().add(worker);
-                workingDayRepository.save(workingDay);
-                //When
-                workingDayRepository.delete(workingDay);
-                //Then
-                assertNotNull(worker.getId());
-                assertFalse(workerRepository.findAll().isEmpty());
             }
         }
     }

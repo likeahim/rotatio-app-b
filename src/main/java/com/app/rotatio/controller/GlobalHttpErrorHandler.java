@@ -35,18 +35,18 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(SuchArchivesNotFoundException.class)
-    public ResponseEntity<Object> handleSuchArchivesNotFoundException(SuchArchivesNotFoundException ex) {
-        return new ResponseEntity<>("Such archives not found", HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(NoArchivesForThisWorkingDayException.class)
-    public ResponseEntity<Object> handleNoArchivesForThisWorkingDayException(NoArchivesForThisWorkingDayException ex) {
-        return new ResponseEntity<>("No archive found", HttpStatus.NOT_FOUND);
-    }
-
     @ExceptionHandler(WorkerNotFoundException.class)
     public ResponseEntity<Object> handleWorkerNotFoundException(WorkerNotFoundException ex) {
         return new ResponseEntity<>("Worker not found", HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex) {
+        return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(WorkingDayExecuteDateConflictException.class)
+    public ResponseEntity<Object> handleWorkingDayExecuteDateConflictException(WorkingDayExecuteDateConflictException ex) {
+        return new ResponseEntity<>("Working day for that execute date already exists", HttpStatus.CONFLICT);
     }
 }

@@ -1,15 +1,12 @@
 package com.app.rotatio.service;
 
-import com.app.rotatio.controller.exception.WorkplaceNotFoundException;
-import com.app.rotatio.domain.Task;
-import com.app.rotatio.domain.WorkingDay;
-import com.app.rotatio.domain.Workplace;
+import com.app.rotatio.controller.exception.WorkplaceNotFoundException;import com.app.rotatio.domain.Workplace;
 import com.app.rotatio.repository.WorkplaceRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -43,30 +40,5 @@ public class WorkplaceService {
 
     public List<Workplace> getAllByNowUsed(final boolean nowUsed) {
         return workplaceRepository.findByNowUsed(nowUsed);
-    }
-
-    public List<Workplace> getAllByDesignation(final String designation) {
-        return workplaceRepository.findByDesignation(designation);
-    }
-
-    public List<Workplace> getAllByTask(final Task task) {
-        return workplaceRepository.findByTask(task);
-    }
-
-    public List<Workplace> getAllByWorkingDay(final WorkingDay workingDay) {
-        return workplaceRepository.findByWorkingDay(workingDay);
-    }
-
-
-    public List<Workplace> longToWorkplacesList(List<Long> workplaces) {
-        return workplaces.stream()
-                .map(id -> {
-                    try {
-                        return getWorkplaceById(id);
-                    } catch (WorkplaceNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .toList();
     }
 }

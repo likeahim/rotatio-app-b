@@ -15,7 +15,7 @@ import java.util.Objects;
 @Builder
 @Entity
 @Table(name = "TASKS")
-public class Task extends ListItem {
+public class Task {
 
     @Id
     @GeneratedValue
@@ -30,15 +30,7 @@ public class Task extends ListItem {
     private String description;
 
     @Column(name = "IS_PERFORMED")
-    private boolean isPerformed;
-
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "WORKING_DAY_ID")
-    private WorkingDay workingDay;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "task", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    private List<Workplace> workplaces = new ArrayList<>();
+    private boolean performed;
 
     @Override
     public boolean equals(Object o) {

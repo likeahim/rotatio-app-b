@@ -6,8 +6,6 @@ public record TaskDto(
         Long id,
         String name,
         String description,
-        boolean isPerformed,
-        Long workingDayId,
-        List<Long> workplaces
+        boolean isPerformed
 ) {
 }

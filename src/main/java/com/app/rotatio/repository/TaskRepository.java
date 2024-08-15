@@ -1,7 +1,6 @@
 package com.app.rotatio.repository;
 
 import com.app.rotatio.domain.Task;
-import com.app.rotatio.domain.WorkingDay;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +13,5 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     Optional<Task> findByName(String name);
-    List<Task> findAllByWorkingDay(WorkingDay workingDay);
+    List<Task> findByPerformed(boolean performed);
 }

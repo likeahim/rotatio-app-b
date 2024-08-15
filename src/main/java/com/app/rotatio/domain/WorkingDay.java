@@ -32,22 +32,7 @@ public class WorkingDay {
     @Column(name = "PLANNED")
     private boolean planned;
 
-    @Column(name = "ARCHIVED")
-    private boolean archived;
-
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "workingDay", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    List<Workplace> workplaces = new ArrayList<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "workingDay", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    List<Task> tasks = new ArrayList<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "workingDay", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    List<Worker> workers = new ArrayList<>();
 }

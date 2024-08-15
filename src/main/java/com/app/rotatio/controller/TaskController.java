@@ -48,11 +48,10 @@ public class TaskController {
         return ResponseEntity.ok(taskMapper.mapToTaskDto(task));
     }
 
-    @SneakyThrows
-    @GetMapping("/byWorkingDay/{workingDayId}")
-    public ResponseEntity<List<TaskDto>> getTasksByWorkingDay(@PathVariable Long workingDayId) {
-        List<Task> allTasksByWorkingDay = taskService.getAllTasksByWorkingDay(workingDayId);
-        return ResponseEntity.ok(taskMapper.mapToTaskDtoList(allTasksByWorkingDay));
+    @GetMapping("/byPerformed/{performed}")
+    public ResponseEntity<List<TaskDto>> getTasksByPerformed(@PathVariable boolean performed) {
+        List<Task> allTasksByPerformed = taskService.getAllTasksByPerformed(performed);
+        return ResponseEntity.ok(taskMapper.mapToTaskDtoList(allTasksByPerformed));
     }
 
     @SneakyThrows

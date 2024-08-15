@@ -14,7 +14,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "WORKERS")
-public class Worker extends ListItem {
+public class Worker {
 
     @Id
     @GeneratedValue

@@ -11,22 +11,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class WorkerService {
 
+    @Autowired
     private final WorkerRepository workerRepository;
+    @Autowired
     private final TaskService taskService;
+    @Autowired
     private final WorkplaceService workplaceService;
+    @Autowired
     private final WorkingDayService workingDayService;
 
     public Worker saveWorker(final Worker worker) {
         return workerRepository.save(worker);
     }
 
-    public Worker deleteWorker(final Worker worker) {
+    public Worker deleteWorker(final Long id) throws WorkerNotFoundException {
+        Worker worker = getWorkerById(id);
         worker.setAbsenceFrom(LocalDate.now());
         worker.setStatus(WorkerStatus.UNEMPLOYED);
         return workerRepository.save(worker);
@@ -85,5 +91,26 @@ public class WorkerService {
     public List<Worker> getWorkersByWorkingDay(final Long workingDayId) throws WorkingDayNotFoundException {
         WorkingDay workingDay = workingDayService.getWorkingDayById(workingDayId);
         return workerRepository.findAllByWorkingDay(workingDay);
+    }
+
+    public List<Worker> longToWorkersList(List<Long> workers) {
+        return workers.stream()
+                .map(id -> {
+                    try {
+                        return getWorkerById(id);
+                    } catch (WorkerNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .toList();
+    }
+
+    public List<Long> workersToLongList(List<Worker> workers) {
+        if (workers.isEmpty()) {
+            return Collections.<Long>emptyList();
+        }
+        return workers.stream()
+                .map(Worker::getId)
+                .toList();
     }
 }

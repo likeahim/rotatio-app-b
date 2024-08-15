@@ -15,7 +15,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "WORKPLACES")
-public class Workplace extends ListItem {
+public class Workplace {
 
     @Id
     @GeneratedValue
@@ -31,18 +31,6 @@ public class Workplace extends ListItem {
 
     @Column(name = "IS_NOW_USED")
     private boolean nowUsed;
-
-    @ManyToOne
-    @JoinColumn(name = "TASK_ID")
-    private Task task;
-
-    @ManyToOne
-    @JoinColumn(name = "WORKING_DAY_ID")
-    private WorkingDay workingDay;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "workplace", fetch = FetchType.EAGER)
-    private List<Worker> workers = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

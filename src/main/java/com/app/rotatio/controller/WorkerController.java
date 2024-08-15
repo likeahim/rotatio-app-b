@@ -42,16 +42,23 @@ public class WorkerController {
     }
 
     @SneakyThrows
-    @PatchMapping(value = "updatePresence/{workerId}/{date}")
+    @PatchMapping(value = "/updatePresence/{workerId}/{date}")
     public ResponseEntity<WorkerDto> updatePresence(@PathVariable Long workerId, @PathVariable LocalDate date) {
         Worker worker = workerService.updatePresenceFrom(workerId, date);
         return ResponseEntity.ok(workerMapper.mapToWorkerDto(worker));
     }
 
     @SneakyThrows
-    @PatchMapping(value = "updateAbsence/{workerId}/{date}")
+    @PatchMapping(value = "/updateAbsence/{workerId}/{date}")
     public ResponseEntity<WorkerDto> updateAbsence(@PathVariable Long workerId, @PathVariable LocalDate date) {
         Worker worker = workerService.updateAbsenceFrom(workerId, date);
+        return ResponseEntity.ok(workerMapper.mapToWorkerDto(worker));
+    }
+
+    @SneakyThrows
+    @DeleteMapping(value = "{workerId}")
+    public ResponseEntity<WorkerDto> deleteWorker(@PathVariable Long workerId) {
+        Worker worker = workerService.deleteWorker(workerId);
         return ResponseEntity.ok(workerMapper.mapToWorkerDto(worker));
     }
 

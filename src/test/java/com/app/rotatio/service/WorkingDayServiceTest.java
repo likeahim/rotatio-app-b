@@ -1,5 +1,6 @@
 package com.app.rotatio.service;
 
+import com.app.rotatio.controller.exception.UserNotFoundException;
 import com.app.rotatio.domain.*;
 import com.app.rotatio.repository.WorkingDayRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -11,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +25,8 @@ class WorkingDayServiceTest {
     private WorkingDayService workingDayService;
     @Mock
     private WorkingDayRepository workingDayRepository;
+    @Mock
+    private UserService userService;
 
     private WorkingDay workingDay;
 
@@ -77,7 +79,7 @@ class WorkingDayServiceTest {
     }
 
     @Test
-    void shouldFetchWorkingDaysByUser() {
+    void shouldFetchWorkingDaysByUser() throws UserNotFoundException {
         //Given
         User user = User.builder()
                 .id(1L)
@@ -86,8 +88,9 @@ class WorkingDayServiceTest {
                 .build();
         workingDay.setUser(user);
         when(workingDayRepository.findByUser(user)).thenReturn(List.of(workingDay));
+        when(userService.getUserById(1L)).thenReturn(user);
         //When
-        List<WorkingDay> workingDays = workingDayService.getAllByUser(user);
+        List<WorkingDay> workingDays = workingDayService.getAllByUser(user.getId());
         //Then
         verify(workingDayRepository).findByUser(user);
         assertEquals(1, workingDays.size());
@@ -123,21 +126,5 @@ class WorkingDayServiceTest {
         //Then
         verify(workingDayRepository).findByExecuteDateBefore(execute);
         assertEquals(1, workingDays.size());
-    }
-
-    @Test
-    void shouldFetchWorkingDaysByArchived() {
-        //Given
-        workingDay.setArchived(true);
-        when(workingDayRepository.findByArchived(true)).thenReturn(List.of(workingDay));
-        when(workingDayRepository.findByArchived(false)).thenReturn(new ArrayList<>());
-        //When
-        List<WorkingDay> archived = workingDayService.getAllByArchived(true);
-        List<WorkingDay> notArchived = workingDayService.getAllByArchived(false);
-        //Then
-        assertEquals(1, archived.size());
-        assertEquals(0, notArchived.size());
-        verify(workingDayRepository).findByArchived(true);
-        verify(workingDayRepository).findByArchived(false);
     }
 }
