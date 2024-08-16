@@ -1,5 +1,6 @@
 package com.app.rotatio.domain;
 
+import com.app.rotatio.prototype.Prototype;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,7 +15,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "WORKERS")
-public class Worker {
+public class Worker extends Prototype<Worker> {
 
     @Id
     @GeneratedValue
@@ -47,11 +48,11 @@ public class Worker {
     @JoinColumn(name = "WORKING_DAY_ID")
     private WorkingDay workingDay;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "TASK_ID")
     private Task task;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "WORKPLACE_ID")
     private Workplace workplace;
 
@@ -67,5 +68,19 @@ public class Worker {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), id);
+    }
+
+    @Override
+    public Worker clone() {
+        return Worker.builder()
+                .workerNumber(this.workerNumber)
+                .firstName(this.firstName)
+                .lastName(this.lastName)
+                .status(this.status)
+                .presenceFrom(this.presenceFrom)
+                .absenceFrom(this.absenceFrom)
+                .task(this.task.clone())
+                .workplace(this.workplace.clone())
+                .build();
     }
 }

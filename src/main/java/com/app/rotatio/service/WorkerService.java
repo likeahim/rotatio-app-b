@@ -94,12 +94,15 @@ public class WorkerService {
     }
 
     public List<Worker> longToWorkersList(List<Long> workers) {
+        if (workers.isEmpty()) {
+            return Collections.emptyList();
+        }
         return workers.stream()
                 .map(id -> {
                     try {
                         return getWorkerById(id);
                     } catch (WorkerNotFoundException e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException(e.getMessage());
                     }
                 })
                 .toList();

@@ -1,10 +1,7 @@
 package com.app.rotatio.service;
 
-import com.app.rotatio.controller.exception.UserNotFoundException;
-import com.app.rotatio.controller.exception.WorkingDayExecuteDateConflictException;
-import com.app.rotatio.controller.exception.WorkingDayNotFoundException;
+import com.app.rotatio.controller.exception.*;
 import com.app.rotatio.domain.*;
-import com.app.rotatio.mapper.WorkingDayMapper;
 import com.app.rotatio.repository.WorkingDayRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,16 @@ public class WorkingDayService {
             throw new WorkingDayExecuteDateConflictException();
         } else {
             return saveWorkingDay(workingDay);
+        }
+    }
+
+    public WorkingDay cloneAndSaveWorkingDay(final Long id) throws WorkingDayNotFoundException, WorkingDayAlreadyArchivedException {
+        WorkingDay toClone = getWorkingDayById(id);
+        if (!toClone.isArchived()) {
+            WorkingDay cloned = toClone.clone();
+            return saveWorkingDay(cloned);
+        } else {
+            throw new WorkingDayAlreadyArchivedException();
         }
     }
 
@@ -64,6 +71,18 @@ public class WorkingDayService {
         return workingDayRepository.findByExecuteDateBefore(date);
     }
 
+    public List<WorkingDay> getAllByArchived(final boolean archived) {
+        return workingDayRepository.findByArchived(archived);
+    }
+
+    public WorkingDay getArchivedWorkingDay(final LocalDate execute) throws NoSuchArchivedDayFoundException {
+        WorkingDay archivedDay = workingDayRepository.findByArchivedAndExecuteDate(true, execute);
+        if (archivedDay == null)
+            throw new NoSuchArchivedDayFoundException();
+        else
+            return archivedDay;
+    }
+
     public void deleteAll() {
         workingDayRepository.deleteAll();
     }
@@ -74,13 +93,13 @@ public class WorkingDayService {
                     try {
                         return getWorkingDayById(id);
                     } catch (WorkingDayNotFoundException e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException(e.getMessage());
                     }
                 }).toList();
     }
 
     public List<Long> workingDaysToLongList(List<WorkingDay> plannedDays) {
-        if(plannedDays.isEmpty()) {
+        if (plannedDays.isEmpty()) {
             return Collections.emptyList();
         }
         return plannedDays.stream()

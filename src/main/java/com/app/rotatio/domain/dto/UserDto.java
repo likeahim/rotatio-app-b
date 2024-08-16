@@ -7,8 +7,9 @@ public record UserDto(
         String firstName,
         String lastname,
         String email,
-        String password,
-        boolean isEnabled,
+        String userStatus,
+        String objectId,
+        String userToken,
         List<Long> plannedDays
 ) {
 }

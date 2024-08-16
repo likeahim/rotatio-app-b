@@ -4,7 +4,6 @@ import com.app.rotatio.controller.exception.UserNotFoundException;
 import com.app.rotatio.domain.User;
 import com.app.rotatio.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
     private final UserRepository userRepository;
 
     public User saveUser(final User user) {
@@ -22,7 +20,7 @@ public class UserService {
     }
 
     public User delete(final User user) {
-        user.setEnabled(false);
+        user.setUserStatus("DISABLED");
         return userRepository.save(user);
     }
 

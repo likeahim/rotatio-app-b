@@ -1,11 +1,10 @@
 package com.app.rotatio.domain;
 
+import com.app.rotatio.prototype.Prototype;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -15,7 +14,7 @@ import java.util.Objects;
 @Builder
 @Entity
 @Table(name = "TASKS")
-public class Task {
+public class Task extends Prototype<Task> {
 
     @Id
     @GeneratedValue
@@ -44,5 +43,14 @@ public class Task {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), id);
+    }
+
+    @Override
+    public Task clone() {
+        return Task.builder()
+                .name(this.name)
+                .description(this.description)
+                .performed(this.performed)
+                .build();
     }
 }

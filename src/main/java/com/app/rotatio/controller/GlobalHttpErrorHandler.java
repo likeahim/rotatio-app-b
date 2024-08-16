@@ -22,7 +22,7 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(WorkingDayNotFoundException.class)
     public ResponseEntity<Object> handleWorkingDayNotFoundException(WorkingDayNotFoundException ex) {
-        return new ResponseEntity<>("Such a working day not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(WorkplaceNotFoundException.class)
@@ -37,7 +37,7 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(WorkerNotFoundException.class)
     public ResponseEntity<Object> handleWorkerNotFoundException(WorkerNotFoundException ex) {
-        return new ResponseEntity<>("Worker not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
@@ -48,5 +48,15 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(WorkingDayExecuteDateConflictException.class)
     public ResponseEntity<Object> handleWorkingDayExecuteDateConflictException(WorkingDayExecuteDateConflictException ex) {
         return new ResponseEntity<>("Working day for that execute date already exists", HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(WorkingDayAlreadyArchivedException.class)
+    public ResponseEntity<Object> handleWorkingDayAlreadyArchivedException(WorkingDayAlreadyArchivedException ex) {
+        return new ResponseEntity<>("Such a working day already archived", HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(NoSuchArchivedDayFoundException.class)
+    public ResponseEntity<Object> handleNoSuchArchivedDayFoundException(NoSuchArchivedDayFoundException ex) {
+        return new ResponseEntity<>("Such a archived day not found", HttpStatus.NOT_FOUND);
     }
 }

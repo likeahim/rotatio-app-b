@@ -34,7 +34,6 @@ public class UserEntityTests {
                 .firstName("John")
                 .lastname("Tester")
                 .email("john.tester@test.com")
-                .password("testing123")
                 .build();
     }
 
@@ -59,7 +58,6 @@ public class UserEntityTests {
             userRepository.save(user);
             User secondUser = User.builder()
                     .email("john.tester@test.com")
-                    .password("testing123")
                     .build();
             //When&Then
             assertThrows(Exception.class, () -> userRepository.saveAndFlush(secondUser));
@@ -70,15 +68,13 @@ public class UserEntityTests {
             //Given
             userRepository.save(user);
             user.setLastname("Updater");
-            user.setEnabled(false);
-            user.setPassword("update123");
+            user.setUserStatus("ENABLED");
             //When
             User savedUser = userRepository.save(user);
             //Then
             assertNotNull(user.getId());
             assertEquals("Updater", savedUser.getLastname());
-            assertEquals("update123", savedUser.getPassword());
-            assertFalse(savedUser.isEnabled());
+            assertEquals("ENABLED", savedUser.getUserStatus());
         }
 
         @Test
@@ -100,7 +96,6 @@ public class UserEntityTests {
                     .firstName("Mark")
                     .lastname("Second")
                     .email("mark.second@test.com")
-                    .password("testing")
                     .build();
             userRepository.save(user);
             userRepository.save(secondUser);
@@ -121,7 +116,6 @@ public class UserEntityTests {
             Optional<User> byEmail = userRepository.findByEmail("john.tester@test.com");
             //Then
             assertTrue(byEmail.isPresent());
-            assertEquals("testing123", byEmail.get().getPassword());
         }
 
         @Test

@@ -20,8 +20,9 @@ public class UserMapper {
                 .firstName(userDto.firstName())
                 .lastname(userDto.lastname())
                 .email(userDto.email())
-                .password(userDto.password())
-                .isEnabled(userDto.isEnabled())
+                .userStatus(userDto.userStatus())
+                .objectId(userDto.objectId())
+                .userToken(userDto.userToken() != null ? userDto.userToken() : null)
                 .plannedDays(workingDayService.longToWorkingDaysList(userDto.plannedDays()))
                 .build();
     }
@@ -32,8 +33,9 @@ public class UserMapper {
                 user.getFirstName(),
                 user.getLastname(),
                 user.getEmail(),
-                user.getPassword(),
-                user.isEnabled(),
+                user.getUserStatus(),
+                user.getObjectId(),
+                user.getUserToken() != null ? user.getUserToken() : null,
                 workingDayService.workingDaysToLongList(user.getPlannedDays())
         );
     }

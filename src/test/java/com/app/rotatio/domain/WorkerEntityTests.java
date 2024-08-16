@@ -279,17 +279,6 @@ class WorkerEntityTests {
             }
 
             @Test
-            void shouldNotCreateTaskAndThrowsException() {
-                //Given
-                worker.setTask(task);
-                //When
-                workerRepository.save(worker);
-                //Then
-                assertThrows(Exception.class, () -> taskRepository.findAll());
-                assertNull(task.getId());
-            }
-
-            @Test
             void shouldNotDeleteTaskWithWorker() {
                 //Given
                 taskRepository.save(task);
@@ -315,17 +304,6 @@ class WorkerEntityTests {
                 workplace = Workplace.builder()
                         .designation("Test")
                         .build();
-            }
-
-            @Test
-            void shouldNotCreateWorkplaceAndThrowsException() {
-                //Given
-                worker.setWorkplace(workplace);
-                //When
-                workerRepository.save(worker);
-                //Then
-                assertThrows(Exception.class, () -> workplaceRepository.findAll());
-                assertNull(workplace.getId());
             }
 
             @Test

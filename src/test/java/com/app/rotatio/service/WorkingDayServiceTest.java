@@ -84,7 +84,6 @@ class WorkingDayServiceTest {
         User user = User.builder()
                 .id(1L)
                 .email("john@test.com")
-                .password("testing123")
                 .build();
         workingDay.setUser(user);
         when(workingDayRepository.findByUser(user)).thenReturn(List.of(workingDay));

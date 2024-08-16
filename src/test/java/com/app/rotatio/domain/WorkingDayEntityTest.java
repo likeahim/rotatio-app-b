@@ -157,7 +157,6 @@ class WorkingDayEntityTest {
                         .firstName("John")
                         .lastname("Tester")
                         .email("tester@test.com")
-                        .password("testing123")
                         .build();
             }
 
