@@ -7,6 +7,7 @@ public record UserDto(
         String firstName,
         String lastname,
         String email,
+        String password,
         String userStatus,
         String objectId,
         String userToken,

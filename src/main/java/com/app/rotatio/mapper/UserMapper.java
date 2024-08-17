@@ -1,7 +1,9 @@
 package com.app.rotatio.mapper;
 
+import com.app.rotatio.domain.BackendlessUser;
 import com.app.rotatio.domain.User;
 import com.app.rotatio.domain.dto.UserDto;
+import com.app.rotatio.domain.dto.backendless.BackendlessUserDto;
 import com.app.rotatio.service.WorkingDayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ public class UserMapper {
                 .firstName(userDto.firstName())
                 .lastname(userDto.lastname())
                 .email(userDto.email())
+                .password(userDto.password())
                 .userStatus(userDto.userStatus())
                 .objectId(userDto.objectId())
                 .userToken(userDto.userToken() != null ? userDto.userToken() : null)
@@ -33,6 +36,7 @@ public class UserMapper {
                 user.getFirstName(),
                 user.getLastname(),
                 user.getEmail(),
+                user.getPassword(),
                 user.getUserStatus(),
                 user.getObjectId(),
                 user.getUserToken() != null ? user.getUserToken() : null,

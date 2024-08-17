@@ -59,4 +59,14 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleNoSuchArchivedDayFoundException(NoSuchArchivedDayFoundException ex) {
         return new ResponseEntity<>("Such a archived day not found", HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(UserRegisterProcessException.class)
+    public ResponseEntity<Object> handleUserRegisterProcessException(UserRegisterProcessException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(EmailEncodingException.class)
+    public ResponseEntity<Object> handleEmailEncodingException(EmailEncodingException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
 }

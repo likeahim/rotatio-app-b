@@ -1,18 +1,19 @@
 package com.app.rotatio.api.backendless.client;
 
 import com.app.rotatio.api.backendless.config.BackendlessConfig;
+import com.app.rotatio.controller.exception.UserRegisterProcessException;
 import com.app.rotatio.domain.BackendlessUser;
 import com.app.rotatio.domain.dto.backendless.BackendlessUserToLoginDto;
 import com.app.rotatio.domain.dto.backendless.BackendlessUserToRegisterDto;
 import com.app.rotatio.domain.dto.backendless.BackendlessUserDto;
+import com.app.rotatio.service.UriService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
@@ -21,57 +22,46 @@ import java.net.URI;
 public class BackendlessClient {
 
     private final RestTemplate restTemplate;
+    private final UriService uriService;
     private final BackendlessConfig config;
 
-    public BackendlessUserDto registerUser(BackendlessUserDto userDto) {
-        URI uri = getExtendedUri("/users/register");
-        HttpHeaders headers = getContentTypeHeader();
-        HttpEntity<BackendlessUserDto> request = new HttpEntity<>(userDto, headers);
-        return restTemplate.postForObject(uri, request, BackendlessUserDto.class);
+    public BackendlessUserDto registerUser(BackendlessUserToRegisterDto userDto) {
+        try {
+            URI uri = uriService.getExtendedUri("/users/register");
+            HttpHeaders headers = uriService.getContentTypeHeader();
+            HttpEntity<BackendlessUserToRegisterDto> request = new HttpEntity<>(userDto, headers);
+            return restTemplate.postForObject(uri, request, BackendlessUserDto.class);
+        } catch (RestClientException e) {
+            throw new UserRegisterProcessException(e.getMessage());
+        }
     }
 
     public BackendlessUserDto loginUser(BackendlessUserToLoginDto userDto) {
-        URI uri = getExtendedUri("/users/login");
-        HttpHeaders headers = getContentTypeHeader();
+        URI uri = uriService.getExtendedUri("/users/login");
+        HttpHeaders headers = uriService.getContentTypeHeader();
         HttpEntity<BackendlessUserToLoginDto> request = new HttpEntity<>(userDto, headers);
         return restTemplate.postForObject(uri, request, BackendlessUserDto.class);
     }
 
     public void logoutUser(BackendlessUser user) {
-        URI uri = getExtendedUri("/users/logout");
-        HttpHeaders headers = getTokenHeader(user.getUserToken());
+        URI uri = uriService.getExtendedUri("/users/logout");
+        HttpHeaders headers = uriService.getTokenHeader(user.getUserToken());
         HttpEntity<String> request = new HttpEntity<>(headers);
         restTemplate.exchange(uri, HttpMethod.GET, request, Void.class);
     }
 
-    public BackendlessUserDto fetchUserById(BackendlessUser user) {
-        URI uri = getExtendedUri("/data/users/" + user.getObjectId());
+    public BackendlessUserDto fetchUserById(String objectId) {
+        URI uri = uriService.getExtendedUri("/data/users/" + objectId);
         return restTemplate.getForObject(uri, BackendlessUserDto.class);
     }
 
-
-
-    private HttpHeaders getContentTypeHeader() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        return headers;
+    public void restorePassword(String email) {
+        URI uri = uriService.getExtendedUri("/users/restorepassword/" + email);
+        restTemplate.exchange(uri, HttpMethod.GET, null, Void.class);
     }
 
-    private HttpHeaders getTokenHeader(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("user-token", token);
-        return headers;
+    public Object deleteUser(String objectId) {
+        URI uri = uriService.getExtendedUri("/data/users/" + objectId);
+        return restTemplate.exchange(uri, HttpMethod.DELETE, null, Object.class);
     }
-
-    private URI getUri() {
-        return UriComponentsBuilder.fromHttpUrl(config.getBackendlessApiSubEndpoint())
-                .build().encode().toUri();
-    }
-
-    private URI getExtendedUri(String path) {
-        return UriComponentsBuilder.fromUri(getUri())
-                .path(path)
-                .build().encode().toUri();
-    }
-
 }
