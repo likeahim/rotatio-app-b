@@ -13,28 +13,30 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class UriService {
 
-    private final BackendlessConfig config;
-
-    public HttpHeaders getContentTypeHeader() {
+    public HttpHeaders getContentTypeHeader(MediaType mediaType) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setContentType(mediaType);
         return headers;
     }
 
-    public HttpHeaders getTokenHeader(String token) {
+    public HttpHeaders getTokenHeader(String tokenName, String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("user-token", token);
+        headers.set(tokenName, token);
         return headers;
     }
 
-    public URI getExtendedUri(String path) {
-        return UriComponentsBuilder.fromUri(getUri())
+    public URI getExtendedUri(String uri, String path) {
+        return UriComponentsBuilder.fromUri(getUri(uri))
                 .path(path)
                 .build().encode().toUri();
     }
 
-    private URI getUri() {
-        return UriComponentsBuilder.fromHttpUrl(config.getBackendlessApiSubEndpoint())
+    public URI getUri(String url) {
+        return UriComponentsBuilder.fromHttpUrl(url)
                 .build().encode().toUri();
+    }
+
+    public String encode(String input) {
+        return input.replace("/", "%2F");
     }
 }

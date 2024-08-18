@@ -69,4 +69,9 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleEmailEncodingException(EmailEncodingException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(CurrentTimeFetchingException.class)
+    public ResponseEntity<Object> handleCurrentTimeFetchingException(CurrentTimeFetchingException ex) {
+        return new ResponseEntity<>("Extern server error, try again later", HttpStatus.CONFLICT);
+    }
 }
