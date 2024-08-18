@@ -1,7 +1,6 @@
 package com.app.rotatio.service;
 
 import com.app.rotatio.api.backendless.config.BackendlessConfig;
-import com.app.rotatio.controller.exception.EmailEncodingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -9,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 @Service
 @RequiredArgsConstructor

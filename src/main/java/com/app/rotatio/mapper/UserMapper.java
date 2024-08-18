@@ -1,13 +1,12 @@
 package com.app.rotatio.mapper;
 
-import com.app.rotatio.domain.BackendlessUser;
 import com.app.rotatio.domain.User;
 import com.app.rotatio.domain.dto.UserDto;
-import com.app.rotatio.domain.dto.backendless.BackendlessUserDto;
 import com.app.rotatio.service.WorkingDayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,12 +20,12 @@ public class UserMapper {
                 .id(userDto.id())
                 .firstName(userDto.firstName())
                 .lastname(userDto.lastname())
-                .email(userDto.email())
+                .email(userDto.login())
                 .password(userDto.password())
                 .userStatus(userDto.userStatus())
                 .objectId(userDto.objectId())
                 .userToken(userDto.userToken() != null ? userDto.userToken() : null)
-                .plannedDays(workingDayService.longToWorkingDaysList(userDto.plannedDays()))
+                .plannedDays(new ArrayList<>())
                 .build();
     }
 
@@ -40,7 +39,8 @@ public class UserMapper {
                 user.getUserStatus(),
                 user.getObjectId(),
                 user.getUserToken() != null ? user.getUserToken() : null,
-                workingDayService.workingDaysToLongList(user.getPlannedDays())
+                workingDayService.workingDaysToLongList(user.getPlannedDays()) != null ?
+                        workingDayService.workingDaysToLongList(user.getPlannedDays()) : new ArrayList<>()
         );
     }
 

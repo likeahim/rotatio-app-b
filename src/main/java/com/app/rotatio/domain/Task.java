@@ -48,7 +48,7 @@ public class Task extends Prototype<Task> {
     @Override
     public Task clone() {
         return Task.builder()
-                .name(this.name)
+                .name(this.name + " clone")
                 .description(this.description)
                 .performed(this.performed)
                 .build();

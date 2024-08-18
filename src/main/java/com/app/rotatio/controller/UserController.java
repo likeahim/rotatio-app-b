@@ -1,9 +1,9 @@
 package com.app.rotatio.controller;
 
+import com.app.rotatio.domain.BackendlessLoginUser;
 import com.app.rotatio.domain.User;
 import com.app.rotatio.domain.dto.UserDto;
-import com.app.rotatio.domain.dto.backendless.BackendlessUserToLoginDto;
-import com.app.rotatio.domain.dto.backendless.BackendlessUserToRegisterDto;
+import com.app.rotatio.domain.dto.backendless.BackendlessLoginUserDto;
 import com.app.rotatio.mapper.UserMapper;
 import com.app.rotatio.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +23,10 @@ public class UserController {
 
     @SneakyThrows
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> register(@RequestBody BackendlessUserToRegisterDto userDto) {
-        User user = userService.registerAndSaveUser(userDto);
-        return ResponseEntity.ok(mapper.mapToUserDto(user));
+    public ResponseEntity<UserDto> register(@RequestBody UserDto userDto) {
+        User user = mapper.mapToUser(userDto);
+        User registeredUser = userService.registerAndSaveUser(user);
+        return ResponseEntity.ok(mapper.mapToUserDto(registeredUser));
     }
 
     @SneakyThrows
@@ -36,8 +37,9 @@ public class UserController {
 
     @SneakyThrows
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> login(@RequestBody BackendlessUserToLoginDto userDto) {
-        User user = userService.logAndSaveUser(userDto);
+    public ResponseEntity<UserDto> login(@RequestBody BackendlessLoginUserDto userDto) {
+        BackendlessLoginUser backendlessLoginUser = userService.mapToBackendlessUser(userDto);
+        User user = userService.logAndSaveUser(backendlessLoginUser);
         return ResponseEntity.ok(mapper.mapToUserDto(user));
     }
 
@@ -53,5 +55,12 @@ public class UserController {
     public ResponseEntity<Void> restorePassword(@PathVariable Long userId) {
         userService.restorePasswordByUserMail(userId);
         return ResponseEntity.ok().build();
+    }
+
+    @SneakyThrows
+    @GetMapping(value = "/{userId}")
+    public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok(mapper.mapToUserDto(user));
     }
 }

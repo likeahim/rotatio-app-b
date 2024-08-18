@@ -129,4 +129,80 @@ class TaskEntityTests {
             assertFalse(taskById.isPresent());
         }
     }
+
+    @Nested
+    class OverrideMethodsTests {
+
+        @Test
+        void shouldEqualsTasksPositive() {
+            //Given
+            Task saved = taskRepository.save(task);
+            //When
+            boolean equals = task.equals(saved);
+            //Then
+            assertTrue(equals);
+        }
+
+        @Test
+        void shouldEqualsTasksNegative() {
+            //Given
+            taskRepository.save(task);
+            Task otherTask = taskRepository.save(Task.builder()
+                    .name("other task").build());
+            //When
+            boolean equals = task.equals(otherTask);
+            //Then
+            assertFalse(equals);
+        }
+
+        @Test
+        void shouldReturnSameHashCodes() {
+            //Given
+            Task saved = taskRepository.save(task);
+            Task otherTask = saved;
+            //When
+            int savedHash = saved.hashCode();
+            int otherTaskHash = otherTask.hashCode();
+            //Then
+            assertEquals(savedHash, otherTaskHash);
+            assertEquals(otherTask, saved);
+        }
+
+        @Test
+        void shouldReturnOtherHashCodes() {
+            //Given
+            Task saved = taskRepository.save(task);
+            Task otherTaskSaved = taskRepository.save(Task.builder()
+                    .name("other task").build());
+            //When
+            int savedHash = saved.hashCode();
+            int otherTaskHash = otherTaskSaved.hashCode();
+            //Then
+            assertNotEquals(savedHash, otherTaskHash);
+        }
+
+        @Test
+        void shouldCloneTask() {
+            //Given
+            //When
+            Task cloned = task.clone();
+            //Then
+            assertEquals(cloned.getName(), task.getName() + " clone");
+            assertNotEquals(task.getName(), cloned.getName());
+            assertEquals(task.isPerformed(), cloned.isPerformed());
+            assertEquals(task.getDescription(), cloned.getDescription());
+        }
+
+        @Test
+        void shouldReturnTaskAsNewObject() {
+            //Given
+            Task saved = taskRepository.save(task);
+            //When
+            Task cloned = saved.clone();
+            //Then
+            assertNotEquals(saved, cloned);
+            assertNotEquals(saved.getId(), cloned.getId());
+            assertNull(cloned.getId());
+        }
+    }
 }

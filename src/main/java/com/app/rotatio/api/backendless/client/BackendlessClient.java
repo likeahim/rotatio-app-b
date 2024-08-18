@@ -1,11 +1,8 @@
 package com.app.rotatio.api.backendless.client;
 
-import com.app.rotatio.api.backendless.config.BackendlessConfig;
 import com.app.rotatio.controller.exception.UserRegisterProcessException;
+import com.app.rotatio.domain.BackendlessLoginUser;
 import com.app.rotatio.domain.BackendlessUser;
-import com.app.rotatio.domain.dto.backendless.BackendlessUserToLoginDto;
-import com.app.rotatio.domain.dto.backendless.BackendlessUserToRegisterDto;
-import com.app.rotatio.domain.dto.backendless.BackendlessUserDto;
 import com.app.rotatio.service.UriService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -23,24 +20,23 @@ public class BackendlessClient {
 
     private final RestTemplate restTemplate;
     private final UriService uriService;
-    private final BackendlessConfig config;
 
-    public BackendlessUserDto registerUser(BackendlessUserToRegisterDto userDto) {
+    public BackendlessUser registerUser(BackendlessUser user) {
         try {
             URI uri = uriService.getExtendedUri("/users/register");
             HttpHeaders headers = uriService.getContentTypeHeader();
-            HttpEntity<BackendlessUserToRegisterDto> request = new HttpEntity<>(userDto, headers);
-            return restTemplate.postForObject(uri, request, BackendlessUserDto.class);
+            HttpEntity<BackendlessUser> request = new HttpEntity<>(user, headers);
+            return restTemplate.postForObject(uri, request, BackendlessUser.class);
         } catch (RestClientException e) {
             throw new UserRegisterProcessException(e.getMessage());
         }
     }
 
-    public BackendlessUserDto loginUser(BackendlessUserToLoginDto userDto) {
+    public BackendlessUser loginUser(BackendlessLoginUser userToLogin) {
         URI uri = uriService.getExtendedUri("/users/login");
         HttpHeaders headers = uriService.getContentTypeHeader();
-        HttpEntity<BackendlessUserToLoginDto> request = new HttpEntity<>(userDto, headers);
-        return restTemplate.postForObject(uri, request, BackendlessUserDto.class);
+        HttpEntity<BackendlessLoginUser> request = new HttpEntity<>(userToLogin, headers);
+        return restTemplate.postForObject(uri, request, BackendlessUser.class);
     }
 
     public void logoutUser(BackendlessUser user) {
@@ -50,9 +46,9 @@ public class BackendlessClient {
         restTemplate.exchange(uri, HttpMethod.GET, request, Void.class);
     }
 
-    public BackendlessUserDto fetchUserById(String objectId) {
+    public BackendlessUser fetchUserById(String objectId) {
         URI uri = uriService.getExtendedUri("/data/users/" + objectId);
-        return restTemplate.getForObject(uri, BackendlessUserDto.class);
+        return restTemplate.getForObject(uri, BackendlessUser.class);
     }
 
     public void restorePassword(String email) {

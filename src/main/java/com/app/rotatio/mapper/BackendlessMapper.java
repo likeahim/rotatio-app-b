@@ -1,9 +1,9 @@
 package com.app.rotatio.mapper;
 
+import com.app.rotatio.domain.BackendlessLoginUser;
 import com.app.rotatio.domain.BackendlessUser;
 import com.app.rotatio.domain.User;
-import com.app.rotatio.domain.dto.backendless.BackendlessUserDto;
-import com.app.rotatio.domain.dto.backendless.BackendlessUserToRegisterDto;
+import com.app.rotatio.domain.dto.backendless.BackendlessLoginUserDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,14 +11,14 @@ import java.util.ArrayList;
 @Service
 public class BackendlessMapper {
 
-    public User mapBackendlessToUser(BackendlessUserDto backendlessUserDto) {
+    public User mapBackendlessToUser(BackendlessUser backendlessUser) {
         return User.builder()
-                .firstName(backendlessUserDto.firstName())
-                .lastname(backendlessUserDto.lastName())
-                .email(backendlessUserDto.email())
-                .objectId(backendlessUserDto.objectId())
-                .userStatus(backendlessUserDto.userStatus())
-                .userToken(backendlessUserDto.userToken() != null ? backendlessUserDto.userToken() : null)
+                .firstName(backendlessUser.getFirstName())
+                .lastname(backendlessUser.getLastName())
+                .email(backendlessUser.getEmail())
+                .objectId(backendlessUser.getObjectId())
+                .userStatus(backendlessUser.getUserStatus())
+                .userToken(backendlessUser.getUserToken() != null ? backendlessUser.getUserToken() : null)
                 .plannedDays(new ArrayList<>())
                 .build();
     }
@@ -32,5 +32,19 @@ public class BackendlessMapper {
                 .userToken(user.getUserToken() != null ? user.getUserToken() : null)
                 .userStatus(user.getUserStatus())
                 .build();
+    }
+
+    public BackendlessLoginUser mapToLoginUser(BackendlessLoginUserDto userDto) {
+        return BackendlessLoginUser.builder()
+                .login(userDto.login())
+                .password(userDto.password())
+                .build();
+    }
+
+    public BackendlessLoginUserDto mapToLoginUserDto(BackendlessLoginUser loginUser) {
+        return new BackendlessLoginUserDto(
+                loginUser.getLogin(),
+                loginUser.getPassword()
+        );
     }
 }

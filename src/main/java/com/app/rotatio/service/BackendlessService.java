@@ -1,10 +1,8 @@
 package com.app.rotatio.service;
 
 import com.app.rotatio.api.backendless.client.BackendlessClient;
+import com.app.rotatio.domain.BackendlessLoginUser;
 import com.app.rotatio.domain.BackendlessUser;
-import com.app.rotatio.domain.dto.backendless.BackendlessUserDto;
-import com.app.rotatio.domain.dto.backendless.BackendlessUserToLoginDto;
-import com.app.rotatio.domain.dto.backendless.BackendlessUserToRegisterDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,13 +14,13 @@ public class BackendlessService {
 
     private final BackendlessClient backendlessClient;
 
-    public BackendlessUserDto registerUser(BackendlessUserToRegisterDto user) {
-        log.info("Registering user " + user.email());
+    public BackendlessUser registerUser(BackendlessUser user) {
+        log.info("Registering user " + user.getEmail());
         return backendlessClient.registerUser(user);
     }
 
-    public BackendlessUserDto loginUser(BackendlessUserToLoginDto user) {
-        log.info("Login user " + user.login());
+    public BackendlessUser loginUser(BackendlessLoginUser user) {
+        log.info("Login user " + user.getLogin());
         return backendlessClient.loginUser(user);
     }
 
@@ -31,7 +29,7 @@ public class BackendlessService {
         log.info(user.getEmail() + " logged out");
     }
 
-    public BackendlessUserDto getUser(String objectId) {
+    public BackendlessUser getUser(String objectId) {
         return backendlessClient.fetchUserById(objectId);
     }
 

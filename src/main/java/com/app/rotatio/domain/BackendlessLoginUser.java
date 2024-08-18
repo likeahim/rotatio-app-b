@@ -9,12 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BackendlessUser {
-    private String email;
+public class BackendlessLoginUser {
+    private String login;
     private String password;
-    private String firstName;
-    private String lastName;
-    private String objectId;
-    private String userToken;
-    private String userStatus;
 }

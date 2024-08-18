@@ -1,6 +1,6 @@
 package com.app.rotatio.domain.dto.backendless;
 
-public record BackendlessUserToLoginDto(
+public record BackendlessLoginUserDto(
         String login,
         String password
 ) {
