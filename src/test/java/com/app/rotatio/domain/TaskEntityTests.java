@@ -90,18 +90,6 @@ class TaskEntityTests {
         }
 
         @Test
-        void shouldFetchTaskByName() {
-            //Given
-            taskRepository.save(task);
-            String taskName = task.getName();
-            //When
-            Task taskByName = taskRepository.findByName(taskName).orElseThrow();
-            //Then
-            assertEquals(taskName, taskByName.getName());
-            assertNotNull(taskByName);
-        }
-
-        @Test
         void shouldFetchAllTasks() {
             //Given
             Task secondTask = Task.builder()
@@ -179,30 +167,6 @@ class TaskEntityTests {
             int otherTaskHash = otherTaskSaved.hashCode();
             //Then
             assertNotEquals(savedHash, otherTaskHash);
-        }
-
-        @Test
-        void shouldCloneTask() {
-            //Given
-            //When
-            Task cloned = task.clone();
-            //Then
-            assertEquals(cloned.getName(), task.getName() + " clone");
-            assertNotEquals(task.getName(), cloned.getName());
-            assertEquals(task.isPerformed(), cloned.isPerformed());
-            assertEquals(task.getDescription(), cloned.getDescription());
-        }
-
-        @Test
-        void shouldReturnTaskAsNewObject() {
-            //Given
-            Task saved = taskRepository.save(task);
-            //When
-            Task cloned = saved.clone();
-            //Then
-            assertNotEquals(saved, cloned);
-            assertNotEquals(saved.getId(), cloned.getId());
-            assertNull(cloned.getId());
         }
     }
 }

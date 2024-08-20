@@ -41,13 +41,6 @@ public class TaskController {
         return ResponseEntity.ok(taskMapper.mapToTaskDto(task));
     }
 
-    @SneakyThrows
-    @GetMapping(value = "{taskName}")
-    public ResponseEntity<TaskDto> getTaskByName(@PathVariable String taskName) {
-        Task task = taskService.getTaskByName(taskName);
-        return ResponseEntity.ok(taskMapper.mapToTaskDto(task));
-    }
-
     @GetMapping("/byPerformed/{performed}")
     public ResponseEntity<List<TaskDto>> getTasksByPerformed(@PathVariable boolean performed) {
         List<Task> allTasksByPerformed = taskService.getAllTasksByPerformed(performed);

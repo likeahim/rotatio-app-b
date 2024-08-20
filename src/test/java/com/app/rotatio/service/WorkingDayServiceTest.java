@@ -55,16 +55,6 @@ class WorkingDayServiceTest {
     }
 
     @Test
-    void shouldDeleteWorkingDay() {
-        //Given
-        workingDayService.saveWorkingDay(workingDay);
-        //When
-        workingDayService.delete(workingDay);
-        //Then
-        verify(workingDayRepository).delete(workingDay);
-    }
-
-    @Test
     void shouldFetchAllWorkingDays() {
         //Given
         workingDayService.saveWorkingDay(workingDay);

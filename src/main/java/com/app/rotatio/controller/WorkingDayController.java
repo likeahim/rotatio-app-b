@@ -62,25 +62,6 @@ public class WorkingDayController {
         return ResponseEntity.ok(workingDayMapper.mapToWorkingDayDto(byExecuteDate));
     }
 
-    @GetMapping("/forecastPlans/{boardDate}")
-    public ResponseEntity<List<WorkingDayDto>> getWorkingDaysBeforeDate(@PathVariable("boardDate") LocalDate boardDate) {
-        List<WorkingDay> allByExecuteDateBefore = workingDayService.getAllByExecuteDateBefore(boardDate);
-        return ResponseEntity.ok(workingDayMapper.mapToWorkingDayDtoList(allByExecuteDateBefore));
-    }
-
-    @GetMapping(value = "/archive/all/{archived}")
-    public ResponseEntity<List<WorkingDayDto>> getWorkingDaysByArchived(@PathVariable boolean archived) {
-        List<WorkingDay> allByArchived = workingDayService.getAllByArchived(archived);
-        return ResponseEntity.ok(workingDayMapper.mapToWorkingDayDtoList(allByArchived));
-    }
-
-    @SneakyThrows
-    @GetMapping(value = "/archive/{executeDate}")
-    public ResponseEntity<WorkingDayDto> getWorkingDaysAfterDate(@PathVariable LocalDate executeDate) {
-        WorkingDay archivedWorkingDay = workingDayService.getArchivedWorkingDay(executeDate);
-        return ResponseEntity.ok(workingDayMapper.mapToWorkingDayDto(archivedWorkingDay));
-    }
-
     @SneakyThrows
     @PutMapping
     public ResponseEntity<WorkingDayDto> updateWorkingDay(@RequestBody WorkingDayDto workingDayDto) {
@@ -88,10 +69,15 @@ public class WorkingDayController {
         return ResponseEntity.ok(workingDayMapper.mapToWorkingDayDto(workingDay));
     }
 
-    @SneakyThrows
-    @PostMapping(value = "/archive/{workingDayId}")
-    public ResponseEntity<WorkingDayDto> archiveWorkingDay(@PathVariable("workingDayId") Long workingDayId) {
-        WorkingDay archived = workingDayService.cloneAndSaveWorkingDay(workingDayId);
-        return ResponseEntity.ok(workingDayMapper.mapToWorkingDayDto(archived));
+    @DeleteMapping(value = "{workingDayId}")
+    public ResponseEntity<Void> deleteWorkingDay(@PathVariable Long workingDayId) {
+        workingDayService.deleteById(workingDayId);
+        return ResponseEntity.ok().build();
     }
+//    @SneakyThrows
+//    @PostMapping(value = "/archive/{workingDayId}")
+//    public ResponseEntity<WorkingDayDto> archiveWorkingDay(@PathVariable("workingDayId") Long workingDayId) {
+//        WorkingDay archived = workingDayService.cloneAndSaveWorkingDay(workingDayId);
+//        return ResponseEntity.ok(workingDayMapper.mapToWorkingDayDto(archived));
+//    }
 }

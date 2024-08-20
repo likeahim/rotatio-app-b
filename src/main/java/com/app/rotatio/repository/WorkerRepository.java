@@ -15,7 +15,5 @@ public interface WorkerRepository extends JpaRepository<Worker, Long> {
     List<Worker> findAllByStatus(WorkerStatus status);
     List<Worker> findAllByPresenceFromBefore(LocalDate presenceFrom);
     List<Worker> findAllByAbsenceFrom(LocalDate absenceFrom);
-    List<Worker> findAllByTask(Task task);
-    List<Worker> findAllByWorkplace(Workplace workplace);
     List<Worker> findAllByWorkingDay(WorkingDay workingDay);
 }

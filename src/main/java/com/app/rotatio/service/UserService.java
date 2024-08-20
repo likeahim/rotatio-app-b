@@ -4,7 +4,6 @@ import com.app.rotatio.controller.exception.UserNotFoundException;
 import com.app.rotatio.domain.BackendlessLoginUser;
 import com.app.rotatio.domain.BackendlessUser;
 import com.app.rotatio.domain.User;
-import com.app.rotatio.domain.dto.backendless.BackendlessUserDto;
 import com.app.rotatio.domain.dto.backendless.BackendlessLoginUserDto;
 import com.app.rotatio.mapper.BackendlessMapper;
 import com.app.rotatio.repository.UserRepository;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -24,6 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BackendlessService backendlessService;
     private final BackendlessMapper mapper;
+    private final EmailService emailService;
 
     public User saveUser(final User user) {
         return userRepository.save(user);
@@ -84,7 +83,7 @@ public class UserService {
     }
 
     @PostConstruct
-    private void verifyUserTokens() {
+    private void verifyUserTokensAndObservers() {
         List<User> users = getAllUsers();
         if (!users.isEmpty()) {
             for (User user : users) {
@@ -96,7 +95,7 @@ public class UserService {
                     }
                 }
             }
+            log.info("Database users tokens updated with Backendless server");
         }
-        log.info("Database users tokens updated with Backendless server");
     }
 }

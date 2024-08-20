@@ -74,4 +74,14 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleCurrentTimeFetchingException(CurrentTimeFetchingException ex) {
         return new ResponseEntity<>("Extern server error, try again later", HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(ArchiveNotFoundException.class)
+    public ResponseEntity<Object> handleArchiveNotFoundException(ArchiveNotFoundException ex) {
+        return new ResponseEntity<>("Archive doesn't exists", HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ArchiveProcessException.class)
+    public ResponseEntity<Object> handleArchiveProcessException(ArchiveProcessException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
 }

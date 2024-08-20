@@ -1,6 +1,5 @@
 package com.app.rotatio.domain;
 
-import com.app.rotatio.prototype.Prototype;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,7 +13,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "WORKPLACES")
-public class Workplace extends Prototype<Workplace> {
+public class Workplace {
 
     @Id
     @GeneratedValue
@@ -35,22 +34,12 @@ public class Workplace extends Prototype<Workplace> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
         Workplace workplace = (Workplace) o;
-        return Objects.equals(id, workplace.id);
+        return Objects.equals(id, workplace.id) && Objects.equals(designation, workplace.designation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), id);
-    }
-
-    @Override
-    public Workplace clone() {
-        return Workplace.builder()
-                .designation(this.designation)
-                .active(this.active)
-                .nowUsed(this.nowUsed)
-                .build();
+        return Objects.hash(id, designation);
     }
 }

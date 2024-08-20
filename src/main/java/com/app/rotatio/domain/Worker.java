@@ -1,6 +1,5 @@
 package com.app.rotatio.domain;
 
-import com.app.rotatio.prototype.Prototype;
 import lombok.*;
 
 import javax.persistence.*;
@@ -8,14 +7,12 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Objects;
 
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Getter
 @Setter
 @Entity
 @Table(name = "WORKERS")
-public class Worker extends Prototype<Worker> {
+public class Worker {
 
     @Id
     @GeneratedValue
@@ -44,7 +41,7 @@ public class Worker extends Prototype<Worker> {
     @Column(name = "ABSENCE_FROM")
     private LocalDate absenceFrom;
 
-    @ManyToOne
+    @ManyToOne //a może manytomany?
     @JoinColumn(name = "WORKING_DAY_ID")
     private WorkingDay workingDay;
 
@@ -56,31 +53,98 @@ public class Worker extends Prototype<Worker> {
     @JoinColumn(name = "WORKPLACE_ID")
     private Workplace workplace;
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private Long id;
+        private Long workerNumber;
+        private String firstName;
+        private String lastName;
+        private WorkerStatus status;
+        private LocalDate presenceFrom;
+        private LocalDate absenceFrom;
+        private WorkingDay workingDay;
+        private Task task;
+        private Workplace workplace;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder workerNumber(Long workerNumber) {
+            this.workerNumber = workerNumber;
+            return this;
+        }
+
+        public Builder firstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public Builder lastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public Builder status(WorkerStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder presenceFrom(LocalDate presenceFrom) {
+            this.presenceFrom = presenceFrom;
+            return this;
+        }
+
+        public Builder absenceFrom(LocalDate absenceFrom) {
+            this.absenceFrom = absenceFrom;
+            return this;
+        }
+
+        public Builder workingDay(WorkingDay workingDay) {
+            this.workingDay = workingDay;
+            return this;
+        }
+
+        public Builder task(Task task) {
+            this.task = task;
+            return this;
+        }
+
+        public Builder workplace(Workplace workplace) {
+            this.workplace = workplace;
+            return this;
+        }
+
+        public Worker build() {
+            Worker worker = new Worker();
+            worker.id = this.id;
+            worker.workerNumber = this.workerNumber;
+            worker.firstName = this.firstName;
+            worker.lastName = this.lastName;
+            worker.status = this.status;
+            worker.presenceFrom = this.presenceFrom;
+            worker.absenceFrom = this.absenceFrom;
+            worker.workingDay = this.workingDay;
+            worker.task = this.task;
+            worker.workplace = this.workplace;
+            return worker;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
         Worker worker = (Worker) o;
-        return Objects.equals(id, worker.id);
+        return Objects.equals(workerNumber, worker.workerNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), id);
-    }
-
-    @Override
-    public Worker clone() {
-        return Worker.builder()
-                .workerNumber(this.workerNumber)
-                .firstName(this.firstName)
-                .lastName(this.lastName)
-                .status(this.status)
-                .presenceFrom(this.presenceFrom)
-                .absenceFrom(this.absenceFrom)
-                .task(this.task.clone())
-                .workplace(this.workplace.clone())
-                .build();
+        return Objects.hashCode(workerNumber);
     }
 }

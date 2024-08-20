@@ -180,39 +180,6 @@ class WorkerEntityTests {
             }
 
             @Test
-            void shouldFetchWorkerListByTask() {
-                //Given
-                Task task = Task.builder().name("Packing").build();
-                taskRepository.save(task);
-                worker.setTask(task);
-                secondWorker.setTask(task);
-                workerRepository.save(worker);
-                workerRepository.save(secondWorker);
-                //When
-                List<Worker> allByTask = workerRepository.findAllByTask(task);
-                //Then
-                assertFalse(allByTask.isEmpty());
-                assertEquals(2, allByTask.size());
-                assertTrue(allByTask.contains(secondWorker));
-            }
-
-            @Test
-            void shouldFetchWorkerListByWorkplace() {
-                //Given
-                Workplace workplace = Workplace.builder()
-                        .designation("Test")
-                        .build();
-                workplaceRepository.save(workplace);
-                worker.setWorkplace(workplace);
-                workerRepository.save(worker);
-                //When
-                List<Worker> allByWorkplace = workerRepository.findAllByWorkplace(workplace);
-                //Then
-                assertFalse(allByWorkplace.isEmpty());
-                assertEquals(1, allByWorkplace.size());
-            }
-
-            @Test
             void shouldFetchWorkerListByWorkingDay() {
                 //Given
                 WorkingDay workingDay = WorkingDay.builder()

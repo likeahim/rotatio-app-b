@@ -1,6 +1,5 @@
 package com.app.rotatio.domain;
 
-import com.app.rotatio.prototype.Prototype;
 import lombok.*;
 
 import javax.persistence.*;
@@ -8,7 +7,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +15,7 @@ import java.util.stream.Collectors;
 @Setter
 @Entity
 @Table(name = "WORKING_DAYS")
-public class WorkingDay extends Prototype<WorkingDay> {
+public class WorkingDay {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,22 +41,4 @@ public class WorkingDay extends Prototype<WorkingDay> {
 
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Worker> workers = new ArrayList<>();
-
-    @Override
-    public WorkingDay clone() {
-            WorkingDay workingDay = new WorkingDay();
-            workingDay.setCreated(this.created);
-            workingDay.setExecuteDate(this.executeDate);
-            workingDay.setArchived(true);
-            workingDay.setUser(this.user);
-            List<Worker> clonedWorkers = this.workers.stream()
-                            .map((worker -> {
-                                Worker clonedWorker = worker.clone();
-                                clonedWorker.setWorkingDay(workingDay);
-                                return clonedWorker;
-                            }))
-                                    .toList();
-            workingDay.setWorkers(clonedWorkers);
-            return workingDay;
-    }
 }

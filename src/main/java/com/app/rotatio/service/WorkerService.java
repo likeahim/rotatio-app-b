@@ -78,16 +78,6 @@ public class WorkerService {
         return workerRepository.findAllByAbsenceFrom(to);
     }
 
-    public List<Worker> getWorkersByTask(final Long taskId) throws TaskNotFoundException {
-        Task task = taskService.getTaskById(taskId);
-        return workerRepository.findAllByTask(task);
-    }
-
-    public List<Worker> getWorkersByWorkplace(final Long workplaceId) throws WorkplaceNotFoundException {
-        Workplace workplace = workplaceService.getWorkplaceById(workplaceId);
-        return workerRepository.findAllByWorkplace(workplace);
-    }
-
     public List<Worker> getWorkersByWorkingDay(final Long workingDayId) throws WorkingDayNotFoundException {
         WorkingDay workingDay = workingDayService.getWorkingDayById(workingDayId);
         return workerRepository.findAllByWorkingDay(workingDay);

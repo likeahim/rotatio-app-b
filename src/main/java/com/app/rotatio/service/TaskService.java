@@ -43,10 +43,6 @@ public class TaskService {
         return taskRepository.findById(id).orElseThrow(TaskNotFoundException::new);
     }
 
-    public Task getTaskByName(final String name) throws TaskNotFoundException {
-        return taskRepository.findByName(name).orElseThrow(TaskNotFoundException::new);
-    }
-
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }

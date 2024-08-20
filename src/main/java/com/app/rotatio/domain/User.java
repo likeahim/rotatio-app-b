@@ -1,6 +1,8 @@
 package com.app.rotatio.domain;
 
+import com.app.rotatio.service.EmailService;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -46,4 +48,5 @@ public class User {
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<WorkingDay> plannedDays = new ArrayList<>();
+
 }

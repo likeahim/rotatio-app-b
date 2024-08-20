@@ -32,18 +32,20 @@ public class WorkingDayService {
         }
     }
 
-    public WorkingDay cloneAndSaveWorkingDay(final Long id) throws WorkingDayNotFoundException, WorkingDayAlreadyArchivedException {
-        WorkingDay toClone = getWorkingDayById(id);
-        if (!toClone.isArchived()) {
-            WorkingDay cloned = toClone.clone();
-            return saveWorkingDay(cloned);
-        } else {
-            throw new WorkingDayAlreadyArchivedException();
-        }
-    }
+//    public WorkingDay cloneAndSaveWorkingDay(final Long id) throws WorkingDayNotFoundException, WorkingDayAlreadyArchivedException {
+//        WorkingDay toClone = getWorkingDayById(id);
+//        if (!toClone.isArchived()) {
+//            toClone.setArchived(true);
+//            WorkingDay cloned = toClone.clone();
+//
+//            return saveWorkingDay(cloned);
+//        } else {
+//            throw new WorkingDayAlreadyArchivedException();
+//        }
+//    }
 
-    public void delete(final WorkingDay workingDay) {
-        workingDayRepository.delete(workingDay);
+    public void deleteById(final Long id) {
+        workingDayRepository.deleteById(id);
     }
 
     public WorkingDay getWorkingDayById(final Long id) throws WorkingDayNotFoundException {
@@ -69,18 +71,6 @@ public class WorkingDayService {
 
     public List<WorkingDay> getAllByExecuteDateBefore(final LocalDate date) {
         return workingDayRepository.findByExecuteDateBefore(date);
-    }
-
-    public List<WorkingDay> getAllByArchived(final boolean archived) {
-        return workingDayRepository.findByArchived(archived);
-    }
-
-    public WorkingDay getArchivedWorkingDay(final LocalDate execute) throws NoSuchArchivedDayFoundException {
-        WorkingDay archivedDay = workingDayRepository.findByArchivedAndExecuteDate(true, execute);
-        if (archivedDay == null)
-            throw new NoSuchArchivedDayFoundException();
-        else
-            return archivedDay;
     }
 
     public void deleteAll() {

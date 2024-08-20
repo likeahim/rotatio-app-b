@@ -96,20 +96,6 @@ public class WorkerController {
     }
 
     @SneakyThrows
-    @GetMapping(value = "/byTask/{taskId}")
-    public ResponseEntity<List<WorkerDto>> getWorkersByTask(@PathVariable Long taskId) {
-        List<Worker> workersByTask = workerService.getWorkersByTask(taskId);
-        return ResponseEntity.ok(workerMapper.mapToWorkerDtoList(workersByTask));
-    }
-
-    @SneakyThrows
-    @GetMapping(value = "/byWorkplace/{workplaceId}")
-    public ResponseEntity<List<WorkerDto>> getWorkersByWorkplace(@PathVariable Long workplaceId) {
-        List<Worker> workers = workerService.getWorkersByWorkplace(workplaceId);
-        return ResponseEntity.ok(workerMapper.mapToWorkerDtoList(workers));
-    }
-
-    @SneakyThrows
     @GetMapping(value = "/byWorkingDay/{workingDayId}")
     public ResponseEntity<List<WorkerDto>> getWorkersByWorkingDay(@PathVariable Long workingDayId) {
         List<Worker> workers = workerService.getWorkersByWorkingDay(workingDayId);
