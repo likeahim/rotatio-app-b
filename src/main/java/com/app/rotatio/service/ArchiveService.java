@@ -29,13 +29,9 @@ public class ArchiveService {
 
     public Archive archive(final Long workingDayId) throws WorkingDayNotFoundException, ArchiveProcessException {
         StringBuilder builder = new StringBuilder();
-        WorkingDay workingDay = workingDayService.getWorkingDayById(workingDayId);
-
-        if (workingDay.getWorkers().isEmpty()) {
-            throw new ArchiveProcessException("No workers available to archive for WorkingDay ID: " + workingDayId);
-        }
 
         try {
+            WorkingDay workingDay = workingDayService.getWorkingDayById(workingDayId);
             for (Worker worker : workingDay.getWorkers()) {
                 String workerData = worker.getFirstName() + " " + worker.getLastName() +
                                     ", " + worker.getTask().getName() +

@@ -18,19 +18,23 @@ public class TaskService {
     private final TaskRepository taskRepository;
 
     public Task saveTask(final Task task) throws TaskAlreadyExistsException {
-        List<Task> list = getAllTasks().stream()
-                .filter(t -> !t.getName().equals(task.getName()))
-                .toList();
-        if(list.isEmpty()) {
-            return taskRepository.save(task);
-        } else {
+        boolean taskExists = getAllTasks().stream()
+                .anyMatch(t -> t.getName().equals(task.getName()));
+
+        if (taskExists) {
             throw new TaskAlreadyExistsException();
+        } else {
+            return taskRepository.save(task);
         }
     }
 
-    public Task delete(final Task task) {
+    public Task delete(final Task task) throws TaskNotFoundException {
         task.setPerformed(false);
-        return taskRepository.save(task);
+        if (taskRepository.existsById(task.getId())) {
+            return taskRepository.save(task);
+        } else {
+            throw new TaskNotFoundException();
+        }
     }
 
     public Task updatePerformed(final Long id, final boolean performed) throws TaskNotFoundException {

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,7 +24,7 @@ public class UserController {
 
     @SneakyThrows
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> register(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> register(@Validated @RequestBody UserDto userDto) {
         User user = mapper.mapToUser(userDto);
         User registeredUser = userService.registerAndSaveUser(user);
         return ResponseEntity.ok(mapper.mapToUserDto(registeredUser));
@@ -37,7 +38,7 @@ public class UserController {
 
     @SneakyThrows
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> login(@RequestBody BackendlessLoginUserDto userDto) {
+    public ResponseEntity<UserDto> login(@Validated @RequestBody BackendlessLoginUserDto userDto) {
         BackendlessLoginUser backendlessLoginUser = userService.mapToBackendlessUser(userDto);
         User user = userService.logAndSaveUser(backendlessLoginUser);
         return ResponseEntity.ok(mapper.mapToUserDto(user));

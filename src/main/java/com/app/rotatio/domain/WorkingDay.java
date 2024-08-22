@@ -39,6 +39,7 @@ public class WorkingDay {
     @JoinColumn(name = "USER_ID")
     private User user;
 
+    @Builder.Default
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Worker> workers = new ArrayList<>();
 }

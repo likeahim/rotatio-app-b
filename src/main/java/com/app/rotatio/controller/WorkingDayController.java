@@ -6,8 +6,10 @@ import com.app.rotatio.mapper.WorkingDayMapper;
 import com.app.rotatio.service.WorkingDayService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -24,7 +26,7 @@ public class WorkingDayController {
 
     @SneakyThrows
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WorkingDayDto> createWorkingDay(@RequestBody WorkingDayDto workingDayDto) {
+    public ResponseEntity<WorkingDayDto> createWorkingDay(@Validated @RequestBody WorkingDayDto workingDayDto) {
         WorkingDay workingDay = workingDayService.createNewWorkingDay(workingDayMapper.mapToWorkingDay(workingDayDto));
         return ResponseEntity.ok(workingDayMapper.mapToWorkingDayDto(workingDay));
     }
@@ -57,14 +59,15 @@ public class WorkingDayController {
 
     @SneakyThrows
     @GetMapping("/execute/{executeDate}")
-    public ResponseEntity<WorkingDayDto> getWorkingDayByExecuteDate(@PathVariable("executeDate") LocalDate executeDate) {
+    public ResponseEntity<WorkingDayDto> getWorkingDayByExecuteDate(
+            @PathVariable("executeDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate executeDate) {
         WorkingDay byExecuteDate = workingDayService.getByExecuteDate(executeDate);
         return ResponseEntity.ok(workingDayMapper.mapToWorkingDayDto(byExecuteDate));
     }
 
     @SneakyThrows
     @PutMapping
-    public ResponseEntity<WorkingDayDto> updateWorkingDay(@RequestBody WorkingDayDto workingDayDto) {
+    public ResponseEntity<WorkingDayDto> updateWorkingDay(@Validated @RequestBody WorkingDayDto workingDayDto) {
         WorkingDay workingDay = workingDayService.saveWorkingDay(workingDayMapper.mapToWorkingDay(workingDayDto));
         return ResponseEntity.ok(workingDayMapper.mapToWorkingDayDto(workingDay));
     }

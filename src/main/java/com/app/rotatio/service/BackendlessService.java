@@ -1,6 +1,7 @@
 package com.app.rotatio.service;
 
 import com.app.rotatio.api.backendless.client.BackendlessClient;
+import com.app.rotatio.controller.exception.UserLoginProcessException;
 import com.app.rotatio.domain.BackendlessLoginUser;
 import com.app.rotatio.domain.BackendlessUser;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class BackendlessService {
         return backendlessClient.registerUser(user);
     }
 
-    public BackendlessUser loginUser(BackendlessLoginUser user) {
+    public BackendlessUser loginUser(BackendlessLoginUser user) throws UserLoginProcessException {
         log.info("Login user " + user.getLogin());
         return backendlessClient.loginUser(user);
     }

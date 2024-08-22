@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,14 +24,14 @@ public class WorkplaceController {
 
     @SneakyThrows
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WorkplaceDto> createWorkplace(@RequestBody WorkplaceDto workplaceDto) {
+    public ResponseEntity<WorkplaceDto> createWorkplace(@Validated @RequestBody WorkplaceDto workplaceDto) {
         Workplace workplace = workplaceService.saveWorkplace(workplaceMapper.mapToWorkplace(workplaceDto));
         return ResponseEntity.ok(workplaceMapper.mapToWorkplaceDto(workplace));
     }
 
     @SneakyThrows
     @PutMapping
-    public ResponseEntity<WorkplaceDto> updateWorkplace(@RequestBody WorkplaceDto workplaceDto) {
+    public ResponseEntity<WorkplaceDto> updateWorkplace(@Validated @RequestBody WorkplaceDto workplaceDto) {
         Workplace workplace = workplaceService.saveWorkplace(workplaceMapper.mapToWorkplace(workplaceDto));
         return ResponseEntity.ok(workplaceMapper.mapToWorkplaceDto(workplace));
     }

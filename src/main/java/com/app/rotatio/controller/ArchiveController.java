@@ -7,6 +7,7 @@ import com.app.rotatio.service.ArchiveService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +21,7 @@ public class ArchiveController {
 
     @SneakyThrows
     @PostMapping(value = "{workingDayId}")
-    public ResponseEntity<ArchiveDto> createArchive(@PathVariable Long workingDayId) {
+    public ResponseEntity<ArchiveDto> createArchive(@Validated @PathVariable Long workingDayId) {
         Archive archiveById = archiveService.archive(workingDayId);
         return ResponseEntity.ok(archiveMapper.mapToArchiveDto(archiveById));
     }

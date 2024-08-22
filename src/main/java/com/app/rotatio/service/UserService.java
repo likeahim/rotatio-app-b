@@ -1,5 +1,6 @@
 package com.app.rotatio.service;
 
+import com.app.rotatio.controller.exception.UserLoginProcessException;
 import com.app.rotatio.controller.exception.UserNotFoundException;
 import com.app.rotatio.domain.BackendlessLoginUser;
 import com.app.rotatio.domain.BackendlessUser;
@@ -50,7 +51,7 @@ public class UserService {
         return getUserByEmail(backendlessUser.getEmail());
     }
 
-    public User logAndSaveUser(final BackendlessLoginUser loginUser) throws UserNotFoundException {
+    public User logAndSaveUser(final BackendlessLoginUser loginUser) throws UserNotFoundException, UserLoginProcessException {
         BackendlessUser backendlessUser = backendlessService.loginUser(loginUser);
         User userByEmail = getUserByEmail(backendlessUser.getEmail());
         userByEmail.setUserToken(backendlessUser.getUserToken());
@@ -83,7 +84,7 @@ public class UserService {
     }
 
     @PostConstruct
-    private void verifyUserTokensAndObservers() {
+    void verifyUserTokensAndObservers() {
         List<User> users = getAllUsers();
         if (!users.isEmpty()) {
             for (User user : users) {

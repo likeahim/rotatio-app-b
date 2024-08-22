@@ -6,8 +6,10 @@ import com.app.rotatio.mapper.WorkerMapper;
 import com.app.rotatio.service.WorkerService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -23,13 +25,13 @@ public class WorkerController {
     private final WorkerMapper workerMapper;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WorkerDto> createWorker(@RequestBody WorkerDto workerDto) {
+    public ResponseEntity<WorkerDto> createWorker(@Validated @RequestBody WorkerDto workerDto) {
         Worker worker = workerService.saveWorker(workerMapper.mapToWorker(workerDto));
         return ResponseEntity.ok(workerMapper.mapToWorkerDto(worker));
     }
 
     @PutMapping
-    public ResponseEntity<WorkerDto> updateWorker(@RequestBody WorkerDto workerDto) {
+    public ResponseEntity<WorkerDto> updateWorker(@Validated @RequestBody WorkerDto workerDto) {
         Worker worker = workerService.saveWorker(workerMapper.mapToWorker(workerDto));
         return ResponseEntity.ok(workerMapper.mapToWorkerDto(worker));
     }
@@ -84,13 +86,15 @@ public class WorkerController {
 
     @SneakyThrows
     @GetMapping(value = "/byPresenceBefore/{date}")
-    public ResponseEntity<List<WorkerDto>> getWorkersByPresenceFrom(@PathVariable LocalDate date) {
+    public ResponseEntity<List<WorkerDto>> getWorkersByPresenceFrom(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         List<Worker> workersByPresenceFrom = workerService.getWorkersByPresenceFromBefore(date);
         return ResponseEntity.ok(workerMapper.mapToWorkerDtoList(workersByPresenceFrom));
     }
 
     @GetMapping(value = "/byAbsenceFrom/{date}")
-    public ResponseEntity<List<WorkerDto>> getWorkersByAbsenceFrom(@PathVariable LocalDate date) {
+    public ResponseEntity<List<WorkerDto>> getWorkersByAbsenceFrom(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         List<Worker> workersByPresenceTo = workerService.getWorkersByPresenceTo(date);
         return ResponseEntity.ok(workerMapper.mapToWorkerDtoList(workersByPresenceTo));
     }

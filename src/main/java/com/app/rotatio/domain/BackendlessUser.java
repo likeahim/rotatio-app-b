@@ -5,11 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class BackendlessUser {
+    @NotNull
     private String email;
     private String password;
     private String firstName;

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class TaskController {
 
     @SneakyThrows
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<TaskDto> createTask(@Validated @RequestBody TaskDto taskDto) {
         Task saved = taskService.saveTask(taskMapper.mapToTask(taskDto));
         return ResponseEntity.ok(taskMapper.mapToTaskDto(saved));
     }
@@ -57,7 +58,7 @@ public class TaskController {
 
     @SneakyThrows
     @PutMapping(value = "/update")
-    public ResponseEntity<TaskDto> updateTask(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<TaskDto> updateTask(@Validated @RequestBody TaskDto taskDto) {
         Task saved = taskService.saveTask(taskMapper.mapToTask(taskDto));
         return ResponseEntity.ok(taskMapper.mapToTaskDto(saved));
     }

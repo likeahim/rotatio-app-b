@@ -77,11 +77,16 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ArchiveNotFoundException.class)
     public ResponseEntity<Object> handleArchiveNotFoundException(ArchiveNotFoundException ex) {
-        return new ResponseEntity<>("Archive doesn't exists", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Such an Archive not found", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ArchiveProcessException.class)
     public ResponseEntity<Object> handleArchiveProcessException(ArchiveProcessException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(UserLoginProcessException.class)
+    public ResponseEntity<Object> handleUserLoginProcessException(UserLoginProcessException ex) {
+        return new ResponseEntity<>("Failed to login", HttpStatus.CONFLICT);
     }
 }

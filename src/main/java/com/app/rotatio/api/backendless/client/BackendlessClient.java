@@ -1,6 +1,7 @@
 package com.app.rotatio.api.backendless.client;
 
 import com.app.rotatio.api.backendless.config.BackendlessConfig;
+import com.app.rotatio.controller.exception.UserLoginProcessException;
 import com.app.rotatio.controller.exception.UserRegisterProcessException;
 import com.app.rotatio.domain.BackendlessLoginUser;
 import com.app.rotatio.domain.BackendlessUser;
@@ -35,11 +36,15 @@ public class BackendlessClient {
         }
     }
 
-    public BackendlessUser loginUser(BackendlessLoginUser userToLogin) {
-        URI uri = uriService.getExtendedUri(config.getBackendlessApiSubEndpoint(), "/users/login");
-        HttpHeaders headers = uriService.getContentTypeHeader(MediaType.APPLICATION_JSON);
-        HttpEntity<BackendlessLoginUser> request = new HttpEntity<>(userToLogin, headers);
-        return restTemplate.postForObject(uri, request, BackendlessUser.class);
+    public BackendlessUser loginUser(BackendlessLoginUser userToLogin) throws UserLoginProcessException {
+        try {
+            URI uri = uriService.getExtendedUri(config.getBackendlessApiSubEndpoint(), "/users/login");
+            HttpHeaders headers = uriService.getContentTypeHeader(MediaType.APPLICATION_JSON);
+            HttpEntity<BackendlessLoginUser> request = new HttpEntity<>(userToLogin, headers);
+            return restTemplate.postForObject(uri, request, BackendlessUser.class);
+        } catch (RestClientException e) {
+            throw new UserLoginProcessException();
+        }
     }
 
     public void logoutUser(BackendlessUser user) {

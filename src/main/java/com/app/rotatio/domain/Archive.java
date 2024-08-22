@@ -3,6 +3,7 @@ package com.app.rotatio.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,8 @@ public class Archive {
     @Column(name = "ARCHIVE_ID")
     private Long id;
 
-    @Column(name = "WORKING_DAY_ID", nullable = false)
+    @NotNull
+    @Column(name = "WORKING_DAY_ID")
     private Long workingDayId;
 
     @Lob

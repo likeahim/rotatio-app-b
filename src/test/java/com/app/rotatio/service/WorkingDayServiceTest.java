@@ -1,9 +1,10 @@
 package com.app.rotatio.service;
 
 import com.app.rotatio.controller.exception.UserNotFoundException;
+import com.app.rotatio.controller.exception.WorkingDayExecuteDateConflictException;
+import com.app.rotatio.controller.exception.WorkingDayNotFoundException;
 import com.app.rotatio.domain.*;
 import com.app.rotatio.repository.WorkingDayRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,10 +14,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class WorkingDayServiceTest {
@@ -36,84 +37,159 @@ class WorkingDayServiceTest {
                 .created(LocalDate.now())
                 .build();
     }
-    @AfterEach
-    void cleanUp() {
-        workingDayService.deleteAll();
-    }
 
     @Test
     void shouldSaveWorkingDay() {
         //Given
-        WorkingDay savedWorkingDay = workingDay;
-        savedWorkingDay.setId(10L);
-        when(workingDayRepository.save(workingDay)).thenReturn(savedWorkingDay);
+        when(workingDayRepository.save(workingDay)).thenReturn(workingDay);
         //When
-        WorkingDay saved = workingDayService.saveWorkingDay(workingDay);
+        WorkingDay savedWorkingDay = workingDayService.saveWorkingDay(workingDay);
         //Then
-        assertEquals(10L, saved.getId());
-        verify(workingDayRepository).save(workingDay);
+        assertNotNull(savedWorkingDay);
+        assertEquals(workingDay.getId(), savedWorkingDay.getId());
+        verify(workingDayRepository, times(1)).save(workingDay);
     }
 
     @Test
-    void shouldFetchAllWorkingDays() {
+    void shouldCreateNewWorkingDay() throws WorkingDayExecuteDateConflictException {
         //Given
-        workingDayService.saveWorkingDay(workingDay);
-        List<WorkingDay> workingDays = List.of(workingDay);
-        when(workingDayRepository.findAll()).thenReturn(workingDays);
+        when(workingDayRepository.existsByExecuteDate(workingDay.getExecuteDate())).thenReturn(false);
+        when(workingDayRepository.save(workingDay)).thenReturn(workingDay);
         //When
-        List<WorkingDay> allWorkingDays = workingDayService.getAllWorkingDays();
+        WorkingDay newWorkingDay = workingDayService.createNewWorkingDay(workingDay);
         //Then
-        assertEquals(workingDays.size(), allWorkingDays.size());
-        assertEquals(1, allWorkingDays.size());
-        verify(workingDayRepository).findAll();
+        assertNotNull(newWorkingDay);
+        assertEquals(workingDay.getExecuteDate(), newWorkingDay.getExecuteDate());
+        verify(workingDayRepository, times(1)).save(workingDay);
     }
 
     @Test
-    void shouldFetchWorkingDaysByUser() throws UserNotFoundException {
+    void shouldThrowExceptionWhenExecuteDateConflict() {
         //Given
-        User user = User.builder()
-                .id(1L)
-                .email("john@test.com")
-                .build();
-        workingDay.setUser(user);
-        when(workingDayRepository.findByUser(user)).thenReturn(List.of(workingDay));
+        when(workingDayRepository.existsByExecuteDate(workingDay.getExecuteDate())).thenReturn(true);
+        //When
+        //Then
+        assertThrows(WorkingDayExecuteDateConflictException.class, () -> workingDayService.createNewWorkingDay(workingDay));
+    }
+
+    @Test
+    void shouldDeleteById() {
+        //Given
+        //When
+        workingDayService.deleteById(workingDay.getId());
+        //Then
+        verify(workingDayRepository, times(1)).deleteById(workingDay.getId());
+    }
+
+    @Test
+    void shouldGetWorkingDayById() throws WorkingDayNotFoundException {
+        //Given
+        when(workingDayRepository.findById(workingDay.getId())).thenReturn(Optional.of(workingDay));
+        //When
+        WorkingDay foundWorkingDay = workingDayService.getWorkingDayById(workingDay.getId());
+        //Then
+        assertNotNull(foundWorkingDay);
+        assertEquals(workingDay.getId(), foundWorkingDay.getId());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenWorkingDayNotFoundById() {
+        //Given
+        when(workingDayRepository.findById(workingDay.getId())).thenReturn(Optional.empty());
+        //When
+        //Then
+        assertThrows(WorkingDayNotFoundException.class, () -> workingDayService.getWorkingDayById(workingDay.getId()));
+    }
+
+    @Test
+    void shouldGetByExecuteDate() throws WorkingDayNotFoundException {
+        //Given
+        when(workingDayRepository.findByExecuteDate(workingDay.getExecuteDate())).thenReturn(workingDay);
+        //When
+        WorkingDay foundWorkingDay = workingDayService.getByExecuteDate(workingDay.getExecuteDate());
+        //Then
+        assertNotNull(foundWorkingDay);
+        assertEquals(workingDay.getExecuteDate(), foundWorkingDay.getExecuteDate());
+    }
+
+    @Test
+    void shouldGetAllWorkingDays() {
+        //Given
+        when(workingDayRepository.findAll()).thenReturn(List.of(workingDay));
+        //When
+        List<WorkingDay> workingDays = workingDayService.getAllWorkingDays();
+        //Then
+        assertNotNull(workingDays);
+        assertEquals(1, workingDays.size());
+    }
+
+    @Test
+    void shouldGetAllByUser() throws UserNotFoundException {
+        //Given
+        User user = new User();
+        user.setId(1L);
         when(userService.getUserById(1L)).thenReturn(user);
+        when(workingDayRepository.findByUser(user)).thenReturn(List.of(workingDay));
         //When
-        List<WorkingDay> workingDays = workingDayService.getAllByUser(user.getId());
+        List<WorkingDay> workingDays = workingDayService.getAllByUser(1L);
         //Then
-        verify(workingDayRepository).findByUser(user);
+        assertNotNull(workingDays);
         assertEquals(1, workingDays.size());
     }
 
     @Test
-    void shouldFetchWorkingDaysByPlanned() {
+    void shouldGetAllByPlanned() {
         //Given
-        WorkingDay secondWorkingDay = WorkingDay.builder()
-                .created(LocalDate.now())
-                .planned(true)
-                .build();
-        when(workingDayRepository.findByPlanned(true)).thenReturn(List.of(secondWorkingDay));
-        when(workingDayRepository.findByPlanned(false)).thenReturn(List.of(workingDay));
+        when(workingDayRepository.findByPlanned(true)).thenReturn(List.of(workingDay));
         //When
-        List<WorkingDay> plannedWorkingDays = workingDayService.getAllByPlanned(true);
-        List<WorkingDay> unplannedWorkingDays = workingDayService.getAllByPlanned(false);
+        List<WorkingDay> workingDays = workingDayService.getAllByPlanned(true);
         //Then
-        verify(workingDayRepository).findByPlanned(true);
-        verify(workingDayRepository).findByPlanned(false);
-        assertEquals(1, unplannedWorkingDays.size());
-        assertEquals(1, plannedWorkingDays.size());
+        assertNotNull(workingDays);
+        assertEquals(1, workingDays.size());
     }
 
     @Test
-    void shouldFetchWorkingDaysByExecuteDateBefore() {
+    void shouldGetAllByExecuteDateBefore() {
         //Given
-        workingDay.setExecuteDate(LocalDate.now().plusDays(1));
-        LocalDate execute = LocalDate.now().plusDays(2);
-        when(workingDayRepository.findByExecuteDateBefore(execute)).thenReturn(List.of(workingDay));
+        LocalDate date = LocalDate.of(2024, 1, 1);
+        when(workingDayRepository.findByExecuteDateBefore(date)).thenReturn(List.of(workingDay));
         //When
-        List<WorkingDay> workingDays = workingDayService.getAllByExecuteDateBefore(execute);
+        List<WorkingDay> workingDays = workingDayService.getAllByExecuteDateBefore(date);
         //Then
-        verify(workingDayRepository).findByExecuteDateBefore(execute);
+        assertNotNull(workingDays);
         assertEquals(1, workingDays.size());
+    }
+
+    @Test
+    void shouldDeleteAll() {
+        //Given
+        //When
+        workingDayService.deleteAll();
+        //Then
+        verify(workingDayRepository, times(1)).deleteAll();
+    }
+
+    @Test
+    void shouldConvertLongListToWorkingDaysList() throws WorkingDayNotFoundException {
+        //Given
+        List<Long> workingDayIds = List.of(1L);
+        when(workingDayRepository.findById(1L)).thenReturn(Optional.of(workingDay));
+        //When
+        List<WorkingDay> workingDays = workingDayService.longToWorkingDaysList(workingDayIds);
+        //Then
+        assertNotNull(workingDays);
+        assertEquals(1, workingDays.size());
+    }
+
+    @Test
+    void shouldConvertWorkingDaysListToLongList() {
+        //Given
+        List<WorkingDay> workingDays = List.of(workingDay);
+        //When
+        List<Long> workingDayIds = workingDayService.workingDaysToLongList(workingDays);
+        //Then
+        assertNotNull(workingDayIds);
+        assertEquals(1, workingDayIds.size());
+        assertEquals(workingDay.getId(), workingDayIds.get(0));
     }
 }
