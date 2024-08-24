@@ -35,10 +35,11 @@ public class TimeApiControllerTest {
 
     @Test
     void shouldGetZones() throws Exception {
+        //Given
         List<String> zones = Arrays.asList("Europe/Warsaw", "America/New_York");
-
         when(service.getAvailableZones()).thenReturn(zones);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/time/zones"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0]").value("Europe/Warsaw"))
@@ -47,6 +48,7 @@ public class TimeApiControllerTest {
 
     @Test
     void shouldGetCurrentTime() throws Exception {
+        //Given
         TimeApiCurrentDto dto = new TimeApiCurrentDto(2024, 8, 20, "2024/08/20");
         TimeApiCurrent currentTime = TimeApiCurrent.builder()
                 .year(2024)
@@ -54,10 +56,10 @@ public class TimeApiControllerTest {
                 .day(20)
                 .date("2024/08/20")
                 .build();
-
         when(service.getCurrentTime("Europe/Warsaw")).thenReturn(currentTime);
         when(mapper.mapToCurrentDto(currentTime)).thenReturn(dto);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/time")
                         .param("timeZone", "Europe/Warsaw")
                         .accept(MediaType.APPLICATION_JSON))
@@ -68,8 +70,10 @@ public class TimeApiControllerTest {
 
     @Test
     void shouldGetExactDate() throws Exception {
+        //Given
         when(service.getExactDate("Europe/Warsaw")).thenReturn("2024/08/20");
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/time/value")
                         .param("timeZone", "Europe/Warsaw"))
                 .andExpect(status().isOk())
@@ -78,14 +82,19 @@ public class TimeApiControllerTest {
 
     @Test
     void shouldReturnBadRequestWhenTimeZoneIsMissing() throws Exception {
+        //Given
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/time/value"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void shouldReturnServiceExceptionWhenInvalidTimeZoneIsProvided() throws Exception {
+        //Given
         when(service.getExactDate("Invalid/Zone")).thenThrow(new IllegalArgumentException("Invalid time zone"));
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/time/value")
                         .param("timeZone", "Invalid/Zone"))
                 .andExpect(status().isInternalServerError())
@@ -94,8 +103,10 @@ public class TimeApiControllerTest {
 
     @Test
     void shouldHandleServiceException() throws Exception {
+        //Given
         when(service.getExactDate(anyString())).thenThrow(new RuntimeException("Unexpected error"));
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/time/value")
                         .param("timeZone", "Europe/Warsaw"))
                 .andExpect(status().isInternalServerError())

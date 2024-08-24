@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("v1/rotatio/users")
 @RequiredArgsConstructor
@@ -31,17 +33,31 @@ public class UserController {
     }
 
     @SneakyThrows
-    @DeleteMapping(value = "{objectId}")
-    public ResponseEntity<Object> delete(@PathVariable String objectId) {
-        return ResponseEntity.ok(mapper.mapToUserDto(userService.delete(objectId)));
-    }
-
-    @SneakyThrows
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> login(@Validated @RequestBody BackendlessLoginUserDto userDto) {
         BackendlessLoginUser backendlessLoginUser = userService.mapToBackendlessUser(userDto);
         User user = userService.logAndSaveUser(backendlessLoginUser);
         return ResponseEntity.ok(mapper.mapToUserDto(user));
+    }
+
+    @SneakyThrows
+    @PutMapping
+    public ResponseEntity<UserDto> update(@Validated @RequestBody UserDto userDto) {
+        User user = mapper.mapToUser(userDto);
+        User updated = userService.updateUser(user);
+        return ResponseEntity.ok(mapper.mapToUserDto(updated));
+    }
+
+    @SneakyThrows
+    @DeleteMapping(value = "{objectId}")
+    public ResponseEntity<Object> delete(@PathVariable String objectId) {
+        return ResponseEntity.ok(mapper.mapToUserDto(userService.delete(objectId)));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getAll() {
+        List<User> allUsers = userService.getAllUsers();
+        return ResponseEntity.ok(mapper.mapToUserDtoList(allUsers));
     }
 
     @SneakyThrows

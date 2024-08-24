@@ -27,7 +27,7 @@ public class Task {
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @Column(name = "IS_PERFORMED")
+    @Column(name = "IS_PERFORMED", columnDefinition = "BOOLEAN")
     private boolean performed;
 
     @Override

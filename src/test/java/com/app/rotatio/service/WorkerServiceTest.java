@@ -50,11 +50,11 @@ class WorkerServiceTest {
 
     @Test
     void shouldSaveWorker() {
-        // Given
+        //Given
         when(workerRepository.save(worker)).thenReturn(worker);
-        // When
+        //When
         Worker savedWorker = workerService.saveWorker(worker);
-        // Then
+        //Then
         assertNotNull(savedWorker);
         assertEquals(worker.getId(), savedWorker.getId());
         verify(workerRepository, times(1)).save(worker);
@@ -62,12 +62,12 @@ class WorkerServiceTest {
 
     @Test
     void shouldDeleteWorker() throws WorkerNotFoundException {
-        // Given
+        //Given
         when(workerRepository.findById(worker.getId())).thenReturn(Optional.of(worker));
         when(workerRepository.save(worker)).thenReturn(worker);
-        // When
+        //When
         Worker deletedWorker = workerService.deleteWorker(worker.getId());
-        // Then
+        //Then
         assertNotNull(deletedWorker);
         assertEquals(WorkerStatus.UNEMPLOYED, deletedWorker.getStatus());
         assertEquals(LocalDate.now(), deletedWorker.getAbsenceFrom());
@@ -76,12 +76,12 @@ class WorkerServiceTest {
 
     @Test
     void shouldUpdateStatus() throws WorkerNotFoundException {
-        // Given
+        //Given
         when(workerRepository.findById(worker.getId())).thenReturn(Optional.of(worker));
         when(workerRepository.save(worker)).thenReturn(worker);
-        // When
+        //When
         Worker updatedWorker = workerService.updateStatus(worker.getId(), WorkerStatus.UNEMPLOYED.getValue());
-        // Then
+        //Then
         assertNotNull(updatedWorker);
         assertEquals(WorkerStatus.UNEMPLOYED, updatedWorker.getStatus());
         verify(workerRepository, times(1)).save(worker);
@@ -89,13 +89,13 @@ class WorkerServiceTest {
 
     @Test
     void shouldUpdatePresenceFrom() throws WorkerNotFoundException {
-        // Given
+        //Given
         LocalDate newDate = LocalDate.of(2024, 1, 1);
         when(workerRepository.findById(worker.getId())).thenReturn(Optional.of(worker));
         when(workerRepository.save(worker)).thenReturn(worker);
-        // When
+        //When
         Worker updatedWorker = workerService.updatePresenceFrom(worker.getId(), newDate);
-        // Then
+        //Then
         assertNotNull(updatedWorker);
         assertEquals(newDate, updatedWorker.getPresenceFrom());
         verify(workerRepository, times(1)).save(worker);
@@ -103,13 +103,13 @@ class WorkerServiceTest {
 
     @Test
     void shouldUpdateAbsenceFrom() throws WorkerNotFoundException {
-        // Given
+        //Given
         LocalDate newDate = LocalDate.of(2024, 6, 1);
         when(workerRepository.findById(worker.getId())).thenReturn(Optional.of(worker));
         when(workerRepository.save(worker)).thenReturn(worker);
-        // When
+        //When
         Worker updatedWorker = workerService.updateAbsenceFrom(worker.getId(), newDate);
-        // Then
+        //Then
         assertNotNull(updatedWorker);
         assertEquals(newDate, updatedWorker.getAbsenceFrom());
         verify(workerRepository, times(1)).save(worker);
@@ -117,65 +117,66 @@ class WorkerServiceTest {
 
     @Test
     void shouldGetWorkerById() throws WorkerNotFoundException {
-        // Given
+        //Given
         when(workerRepository.findById(worker.getId())).thenReturn(Optional.of(worker));
-        // When
+        //When
         Worker foundWorker = workerService.getWorkerById(worker.getId());
-        // Then
+        //Then
         assertNotNull(foundWorker);
         assertEquals(worker.getId(), foundWorker.getId());
     }
 
     @Test
     void shouldThrowExceptionWhenWorkerNotFoundById() {
-        // Given
+        //Given
         when(workerRepository.findById(worker.getId())).thenReturn(Optional.empty());
-        // When & Then
+        //When
+        //Then
         assertThrows(WorkerNotFoundException.class, () -> workerService.getWorkerById(worker.getId()));
     }
 
     @Test
     void shouldGetAllWorkers() {
-        // Given
+        //Given
         when(workerRepository.findAll()).thenReturn(List.of(worker));
-        // When
+        //When
         List<Worker> workers = workerService.getAllWorkers();
-        // Then
+        //Then
         assertNotNull(workers);
         assertEquals(1, workers.size());
     }
 
     @Test
     void shouldGetWorkersByStatus() {
-        // Given
+        //Given
         when(workerRepository.findAllByStatus(WorkerStatus.PRESENT)).thenReturn(List.of(worker));
-        // Ween
+        //Ween
         List<Worker> workers = workerService.getWorkersByStatus(WorkerStatus.PRESENT.getValue());
-        // Then
+        //Then
         assertNotNull(workers);
         assertEquals(1, workers.size());
     }
 
     @Test
     void shouldGetWorkersByPresenceFromBefore() {
-        // Given
+        //Given
         LocalDate date = worker.getAbsenceFrom();
         when(workerRepository.findAllByPresenceFromBefore(date)).thenReturn(List.of(worker));
-        // When
+        //When
         List<Worker> workers = workerService.getWorkersByPresenceFromBefore(date);
-        // Then
+        //Then
         assertNotNull(workers);
         assertEquals(1, workers.size());
     }
 
     @Test
     void shouldGetWorkersByPresenceTo() {
-        // Given
+        //Given
         LocalDate date = worker.getAbsenceFrom();
         when(workerRepository.findAllByAbsenceFrom(date)).thenReturn(List.of(worker));
-        // When
+        //When
         List<Worker> workers = workerService.getWorkersByPresenceTo(date);
-        // Then
+        //Then
         assertNotNull(workers);
         assertEquals(1, workers.size());
     }
@@ -185,9 +186,9 @@ class WorkerServiceTest {
         //Given
         LocalDate date = worker.getAbsenceFrom();
         when(workerRepository.findAllByPresenceFromBefore(date)).thenReturn(List.of());
-        // When
+        //When
         List<Worker> workers = workerService.getWorkersByPresenceFromBefore(date);
-        // Then
+        //Then
         assertNotNull(workers);
         assertEquals(0, workers.size());
     }
@@ -197,46 +198,46 @@ class WorkerServiceTest {
         //Given
         LocalDate date = worker.getAbsenceFrom();
         when(workerRepository.findAllByAbsenceFrom(date)).thenReturn(List.of());
-        // When
+        //When
         List<Worker> workers = workerService.getWorkersByPresenceTo(date);
-        // Then
+        //Then
         assertNotNull(workers);
         assertEquals(0, workers.size());
     }
 
     @Test
     void shouldGetWorkersByWorkingDay() throws WorkingDayNotFoundException {
-        // Given
+        //Given
         WorkingDay workingDay = new WorkingDay();
         workingDay.setId(1L);
         when(workingDayService.getWorkingDayById(1L)).thenReturn(workingDay);
         when(workerRepository.findAllByWorkingDay(workingDay)).thenReturn(List.of(worker));
-        // When
+        //When
         List<Worker> workers = workerService.getWorkersByWorkingDay(1L);
-        // Then
+        //Then
         assertNotNull(workers);
         assertEquals(1, workers.size());
     }
 
     @Test
     void shouldConvertLongListToWorkersList() throws WorkerNotFoundException {
-        // Given
+        //Given
         List<Long> workerIds = List.of(1L);
         when(workerRepository.findById(1L)).thenReturn(Optional.of(worker));
-        // When
+        //When
         List<Worker> workers = workerService.longToWorkersList(workerIds);
-        // Then
+        //Then
         assertNotNull(workers);
         assertEquals(1, workers.size());
     }
 
     @Test
     void shouldConvertWorkersListToLongList() {
-        // Given
+        //Given
         List<Worker> workers = List.of(worker);
-        // When
+        //When
         List<Long> workerIds = workerService.workersToLongList(workers);
-        // Then
+        //Then
         assertNotNull(workerIds);
         assertEquals(1, workerIds.size());
         assertEquals(worker.getId(), workerIds.get(0));

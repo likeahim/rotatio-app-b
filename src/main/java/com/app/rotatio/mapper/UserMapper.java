@@ -20,7 +20,7 @@ public class UserMapper {
                 .id(userDto.id())
                 .firstName(userDto.firstName())
                 .lastname(userDto.lastname())
-                .email(userDto.login())
+                .email(userDto.email())
                 .password(userDto.password())
                 .userStatus(userDto.userStatus())
                 .objectId(userDto.objectId())

@@ -54,13 +54,11 @@ class UserServiceTest {
 
     @Test
     void shouldSaveUser() {
-        // Given
+        //Given
         when(userRepository.save(user)).thenReturn(user);
-
-        // When
+        //When
         User savedUser = userService.saveUser(user);
-
-        // Then
+        //Then
         assertNotNull(savedUser);
         assertEquals("test@example.com", savedUser.getEmail());
         verify(userRepository, times(1)).save(user);
@@ -68,16 +66,14 @@ class UserServiceTest {
 
     @Test
     void shouldRegisterAndSaveUser() {
-        // Given
+        //Given
         when(mapper.mapToBackendlessUser(user)).thenReturn(backendlessUser);
         when(backendlessService.registerUser(backendlessUser)).thenReturn(backendlessUser);
         when(mapper.mapBackendlessToUser(backendlessUser)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
-
-        // When
+        //When
         User registeredUser = userService.registerAndSaveUser(user);
-
-        // Then
+        //Then
         assertNotNull(registeredUser);
         assertEquals("test@example.com", registeredUser.getEmail());
         verify(mapper, times(1)).mapToBackendlessUser(user);
@@ -87,14 +83,12 @@ class UserServiceTest {
 
     @Test
     void shouldDeleteUser() throws UserNotFoundException {
-        // Given
+        //Given
         when(userRepository.findByObjectId("12345")).thenReturn(Optional.of(user));
         when(userRepository.save(user)).thenReturn(user);
-
-        // When
+        //When
         User deletedUser = userService.delete("12345");
-
-        // Then
+        //Then
         assertNotNull(deletedUser);
         assertEquals("DELETED ON BACKENDLESS", deletedUser.getUserStatus());
         verify(backendlessService, times(1)).deleteUser("12345");
@@ -103,53 +97,50 @@ class UserServiceTest {
 
     @Test
     void shouldThrowExceptionWhenDeletingNonExistingUser() {
-        // Given
+        //Given
         when(userRepository.findByObjectId("invalid")).thenReturn(Optional.empty());
 
-        // When & Then
+        //When
+        //Then
         assertThrows(UserNotFoundException.class, () -> userService.delete("invalid"));
         verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
     void shouldGetUserById() throws UserNotFoundException {
-        // Given
+        //Given
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-
-        // When
+        //When
         User foundUser = userService.getUserById(1L);
-
-        // Then
+        //Then
         assertNotNull(foundUser);
         assertEquals("test@example.com", foundUser.getEmail());
     }
 
     @Test
     void shouldThrowExceptionWhenUserNotFoundById() {
-        // Given
+        //Given
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // When & Then
+        //When
+        //Then
         assertThrows(UserNotFoundException.class, () -> userService.getUserById(1L));
     }
 
     @Test
     void shouldFetchUserByBackendlessObjectId() throws UserNotFoundException {
-        // Given
+        //Given
         when(backendlessService.getUser("12345")).thenReturn(backendlessUser);
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
-
-        // When
+        //When
         User foundUser = userService.fetchUserByBackendlessObjectId("12345");
-
-        // Then
+        //Then
         assertNotNull(foundUser);
         assertEquals("test@example.com", foundUser.getEmail());
     }
 
     @Test
     void shouldLogAndSaveUser() throws UserNotFoundException, UserLoginProcessException {
-        // Given
+        //Given
         BackendlessLoginUser loginUser = BackendlessLoginUser.builder()
                 .login("test@example.com")
                 .password("password")
@@ -158,15 +149,12 @@ class UserServiceTest {
                 .email("test@example.com")
                 .userToken("user-token")
                 .build();
-
         when(backendlessService.loginUser(loginUser)).thenReturn(loggingUser);
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
         when(userRepository.save(user)).thenReturn(user);
-
-        // When
+        //When
         User loggedUser = userService.logAndSaveUser(loginUser);
-
-        // Then
+        //Then
         assertNotNull(loggedUser);
         assertEquals("user-token", loggedUser.getUserToken());
         verify(userRepository, times(1)).save(user);
@@ -174,14 +162,12 @@ class UserServiceTest {
 
     @Test
     void shouldLogoutUser() throws UserNotFoundException {
-        // Given
+        //Given
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(mapper.mapToBackendlessUser(user)).thenReturn(backendlessUser);
-
-        // When
+        //When
         userService.logout(1L);
-
-        // Then
+        //Then
         verify(backendlessService, times(1)).logoutUser(backendlessUser);
         verify(userRepository, times(1)).save(user);
         assertNull(user.getUserToken());
@@ -189,49 +175,44 @@ class UserServiceTest {
 
     @Test
     void shouldRestorePasswordByUserMail() throws UserNotFoundException {
-        // Given
+        //Given
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-
-        // When
+        //When
         userService.restorePasswordByUserMail(1L);
-
-        // Then
+        //Then
         verify(backendlessService, times(1)).restorePassword("test@example.com");
     }
 
     @Test
     void shouldGetUserByEmail() throws UserNotFoundException {
-        // Given
+        //Given
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
-
-        // When
+        //When
         User foundUser = userService.getUserByEmail("test@example.com");
-
-        // Then
+        //Then
         assertNotNull(foundUser);
         assertEquals("test@example.com", foundUser.getEmail());
     }
 
     @Test
     void shouldThrowExceptionWhenUserNotFoundByEmail() {
-        // Given
+        //Given
         when(userRepository.findByEmail("invalid@example.com")).thenReturn(Optional.empty());
 
-        // When & Then
+        //When
+        //Then
         assertThrows(UserNotFoundException.class, () -> userService.getUserByEmail("invalid@example.com"));
     }
 
     @Test
     void shouldVerifyUserTokensAndObservers() {
-        // Given
+        //Given
         when(userRepository.findAll()).thenReturn(List.of(user));
         when(backendlessService.getUser(user.getObjectId())).thenReturn(backendlessUser);
         when(userRepository.save(user)).thenReturn(user);
-
-        // When
+        //When
         userService.verifyUserTokensAndObservers();
-
-        // Then
+        //Then
         assertEquals(null, user.getUserToken());
         verify(userRepository, times(1)).save(user);
     }

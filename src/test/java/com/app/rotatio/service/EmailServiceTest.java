@@ -47,53 +47,46 @@ class EmailServiceTest {
 
     @Test
     void shouldSendEmailSuccessfully() {
-        // When
+        //When
         assertDoesNotThrow(() -> emailService.send(mail));
-
-        // Then
+        //Then
         verify(javaMailSender, times(1)).send(any(SimpleMailMessage.class));
         verifyNoMoreInteractions(javaMailSender);
     }
 
     @Test
     void shouldHandleMailExceptionDuringSend() {
-        // Given
+        //Given
         doThrow(new MailException("Test exception") {}).when(javaMailSender).send(any(SimpleMailMessage.class));
-
-        // When
+        //When
         emailService.send(mail);
-
-        // Then
+        //Then
         verify(javaMailSender, times(1)).send(any(SimpleMailMessage.class));
         verifyNoMoreInteractions(javaMailSender);
     }
 
     @Test
     void shouldCreateMailMessageSuccessfully() {
-        // Given
+        //Given
         SimpleMailMessage expectedMessage = new SimpleMailMessage();
         expectedMessage.setTo(mail.getTo());
         expectedMessage.setSubject(mail.getSubject());
         expectedMessage.setText(mail.getBody());
         expectedMessage.setFrom(mail.getFrom());
-
-        // When
+        //When
         emailService.send(mail);
-
-        // Then
+        //Then
         verify(javaMailSender, times(1)).send(expectedMessage);
         assertDoesNotThrow(() -> emailService.send(mail));
     }
 
     @Test
     void shouldSendNewUserMessageSuccessfully() {
-        // Given
+        //Given
         when(adminConfig.getMail()).thenReturn("admin@example.com");
-
-        // When
+        //When
         assertDoesNotThrow(() -> emailService.sendNewUserMessage(user));
-
-        // Then
+        //Then
         verify(javaMailSender, times(1)).send(any(SimpleMailMessage.class));
         verify(adminConfig, times(1)).getMail();
         verifyNoMoreInteractions(javaMailSender);
@@ -101,14 +94,12 @@ class EmailServiceTest {
 
     @Test
     void shouldHandleMailExceptionDuringSendNewUserMessage() {
-        // Given
+        //Given
         when(adminConfig.getMail()).thenReturn("admin@example.com");
         doThrow(new MailException("Test exception") {}).when(javaMailSender).send(any(SimpleMailMessage.class));
-
-        // When
+        //When
         emailService.sendNewUserMessage(user);
-
-        // Then
+        //Then
         verify(javaMailSender, times(1)).send(any(SimpleMailMessage.class));
         verify(adminConfig, times(1)).getMail();
         verifyNoMoreInteractions(javaMailSender);

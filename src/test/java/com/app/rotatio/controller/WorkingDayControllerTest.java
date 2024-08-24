@@ -67,11 +67,12 @@ public class WorkingDayControllerTest {
 
     @Test
     void shouldCreateWorkingDay() throws Exception {
-
+        //Given
         when(workingDayMapper.mapToWorkingDay(any(WorkingDayDto.class))).thenReturn(workingDay);
         when(workingDayService.createNewWorkingDay(any(WorkingDay.class))).thenReturn(workingDay);
         when(workingDayMapper.mapToWorkingDayDto(any(WorkingDay.class))).thenReturn(workingDayDto);
-
+        //When
+        //Then
         mockMvc.perform(post("/v1/rotatio/workingDays")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
@@ -82,10 +83,11 @@ public class WorkingDayControllerTest {
 
     @Test
     void shouldGetWorkingDays() throws Exception {
-
+        //Given
         when(workingDayService.getAllWorkingDays()).thenReturn(workingDays);
         when(workingDayMapper.mapToWorkingDayDtoList(any())).thenReturn(workingDayDtos);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workingDays"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].archived").value(false))
@@ -94,10 +96,11 @@ public class WorkingDayControllerTest {
 
     @Test
     void shouldGetWorkingDayById() throws Exception {
-
+        //Given
         when(workingDayService.getWorkingDayById(anyLong())).thenReturn(workingDay);
         when(workingDayMapper.mapToWorkingDayDto(any(WorkingDay.class))).thenReturn(workingDayDto);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workingDays/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId").value(1));
@@ -105,11 +108,12 @@ public class WorkingDayControllerTest {
 
     @Test
     void shouldGetWorkingDaysByUserId() throws Exception {
-
+        //Given
         when(workingDayService.getAllByUser(anyLong())).thenReturn(workingDays);
         when(workingDayMapper.mapToWorkingDayDtoList(any())).thenReturn(workingDayDtos);
         String date = LocalDate.now().plusDays(1).toString();
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workingDays/byUser/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].userId").value(1))
@@ -118,13 +122,14 @@ public class WorkingDayControllerTest {
 
     @Test
     void shouldGetWorkingDaysByPlanned() throws Exception {
-
+        //Given
         WorkingDayDto secondDay = new WorkingDayDto(2L, LocalDate.now(), LocalDate.now(),
                 false, false, 1L, new ArrayList<>());
         workingDayDtos.add(secondDay);
         when(workingDayService.getAllByPlanned(anyBoolean())).thenReturn(workingDays);
         when(workingDayMapper.mapToWorkingDayDtoList(any())).thenReturn(workingDayDtos);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workingDays/planned/false"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].planned").value(false))
@@ -133,11 +138,12 @@ public class WorkingDayControllerTest {
 
     @Test
     void shouldGetWorkingDayByExecuteDate() throws Exception {
-
+        //Given
         when(workingDayService.getByExecuteDate(any(LocalDate.class))).thenReturn(workingDay);
         when(workingDayMapper.mapToWorkingDayDto(any(WorkingDay.class))).thenReturn(workingDayDto);
         String date = LocalDate.now().plusDays(1).toString();
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workingDays/execute/" + date))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.executeDate").value(date));
@@ -145,13 +151,14 @@ public class WorkingDayControllerTest {
 
     @Test
     void shouldUpdateWorkingDay() throws Exception {
-
+        //Given
         WorkingDayDto updated = new WorkingDayDto(1L, workingDayDto.created(), workingDayDto.executeDate(),
                 true, false, 1L, new ArrayList<>());
         when(workingDayMapper.mapToWorkingDay(any(WorkingDayDto.class))).thenReturn(workingDay);
         when(workingDayService.saveWorkingDay(any(WorkingDay.class))).thenReturn(workingDay);
         when(workingDayMapper.mapToWorkingDayDto(any(WorkingDay.class))).thenReturn(updated);
-
+        //When
+        //Then
         mockMvc.perform(put("/v1/rotatio/workingDays")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
@@ -162,16 +169,20 @@ public class WorkingDayControllerTest {
 
     @Test
     void shouldDeleteWorkingDay() throws Exception {
+        //Given
         Mockito.doNothing().when(workingDayService).deleteById(anyLong());
-
+        //When
+        //Then
         mockMvc.perform(delete("/v1/rotatio/workingDays/1"))
                 .andExpect(status().isOk());
     }
 
     @Test
     void shouldReturnNotFoundWhenWorkingDayDoesNotExist() throws Exception {
+        //Given
         when(workingDayService.getWorkingDayById(1L)).thenThrow(new WorkingDayNotFoundException());
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workingDays/1"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Such a working day does not exist"));
@@ -179,10 +190,12 @@ public class WorkingDayControllerTest {
 
     @Test
     void shouldReturnBadRequestWhenInvalidInput() throws Exception {
+        //Given
         WorkingDayDto invalid = new WorkingDayDto(1L, null, LocalDate.now().plusDays(1), false,
                 false, 1L, new ArrayList<>());
         String invalidJson = mapper.writeValueAsString(invalid);
-
+        //When
+        //Then
         mockMvc.perform(post("/v1/rotatio/workingDays")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidJson))
@@ -191,8 +204,10 @@ public class WorkingDayControllerTest {
 
     @Test
     void shouldHandleServiceException() throws Exception {
+        //Given
         when(workingDayService.getWorkingDayById(anyLong())).thenThrow(new RuntimeException("Unexpected error"));
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workingDays/1"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string("Unexpected error"));

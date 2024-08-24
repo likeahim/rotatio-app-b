@@ -16,11 +16,11 @@ public record TaskDto(
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TaskDto taskDto = (TaskDto) o;
-        return isPerformed == taskDto.isPerformed && Objects.equals(id, taskDto.id) && Objects.equals(name, taskDto.name) && Objects.equals(description, taskDto.description);
+        return Objects.equals(id, taskDto.id) && Objects.equals(name, taskDto.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, isPerformed);
+        return Objects.hash(id, name);
     }
 }

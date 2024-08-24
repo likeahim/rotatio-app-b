@@ -4,6 +4,8 @@ import com.app.rotatio.domain.Archive;
 import com.app.rotatio.domain.dto.ArchiveDto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ArchiveMapper {
 
@@ -20,5 +22,11 @@ public class ArchiveMapper {
                 archive.getId(),
                 archive.getWorkingDayId(),
                 archive.getWorkersData());
+    }
+
+    public List<ArchiveDto> mapToArchiveDtoList(final List<Archive> archives) {
+        return archives.stream()
+                .map(this::mapToArchiveDto)
+                .toList();
     }
 }

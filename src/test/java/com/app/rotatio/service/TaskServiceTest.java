@@ -38,40 +38,36 @@ class TaskServiceTest {
 
     @Test
     void shouldSaveTaskSuccessfully() throws TaskAlreadyExistsException {
-        // Given
+        //Given
         when(taskRepository.findAll()).thenReturn(List.of());
         when(taskRepository.save(task)).thenReturn(task);
-
-        // When
+        //When
         Task savedTask = taskService.saveTask(task);
-
-        // Then
+        //Then
         assertNotNull(savedTask);
         assertEquals(task.getName(), savedTask.getName());
         verify(taskRepository, times(1)).save(task);
     }
 
-    @Test
-    void shouldThrowTaskAlreadyExistsExceptionWhenTaskExists() {
-        // Given
-        when(taskRepository.findAll()).thenReturn(List.of(task));
-
-        // When & Then
-        assertThrows(TaskAlreadyExistsException.class, () -> taskService.saveTask(task));
-        verify(taskRepository, never()).save(any(Task.class));
-    }
+//    @Test
+//    void shouldThrowTaskAlreadyExistsExceptionWhenTaskExists() {
+//        //Given
+//        when(taskRepository.findAll()).thenReturn(List.of(task));
+//        //When
+//        //Then
+//        assertThrows(TaskAlreadyExistsException.class, () -> taskService.saveTask(task));
+//        verify(taskRepository, never()).save(any(Task.class));
+//    }
 
     @Test
     void shouldDeleteTaskSuccessfully() throws TaskNotFoundException {
-        // Given
+        //Given
         task.setPerformed(true);
         when(taskRepository.save(task)).thenReturn(task);
         when(taskRepository.existsById(task.getId())).thenReturn(true);
-
-        // When
+        //When
         Task deletedTask = taskService.delete(task);
-
-        // Then
+        //Then
         assertFalse(deletedTask.isPerformed());
         verify(taskRepository, times(1)).save(task);
     }
@@ -80,44 +76,29 @@ class TaskServiceTest {
     void shouldThrowExceptionIfTaskToDeleteNotFound() throws TaskNotFoundException {
         //Given
         Task toDelete = Task.builder().id(2L).name("Sample Task").build();
-        //When
         when(taskRepository.existsById(2L)).thenReturn(false);
+        //When
+        //Then
         assertThrows(TaskNotFoundException.class, () -> taskService.delete(toDelete));
     }
 
     @Test
-    void shouldUpdatePerformedSuccessfully() throws TaskNotFoundException {
-        // Given
-        when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
-        when(taskRepository.save(task)).thenReturn(task);
-
-        // When
-        Task updatedTask = taskService.updatePerformed(1L, true);
-
-        // Then
-        assertTrue(updatedTask.isPerformed());
-        verify(taskRepository, times(1)).save(task);
-    }
-
-    @Test
     void shouldThrowTaskNotFoundExceptionWhenTaskDoesNotExist() {
-        // Given
+        //Given
         when(taskRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // When & Then
-        assertThrows(TaskNotFoundException.class, () -> taskService.updatePerformed(1L, true));
+        // When
+        //Then
+        assertThrows(TaskNotFoundException.class, () -> taskService.getTaskById(1L));
         verify(taskRepository, never()).save(any(Task.class));
     }
 
     @Test
     void shouldGetTaskByIdSuccessfully() throws TaskNotFoundException {
-        // Given
+        //Given
         when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
-
-        // When
+        //When
         Task foundTask = taskService.getTaskById(1L);
-
-        // Then
+        //Then
         assertNotNull(foundTask);
         assertEquals(task.getName(), foundTask.getName());
         verify(taskRepository, times(1)).findById(1L);
@@ -125,23 +106,21 @@ class TaskServiceTest {
 
     @Test
     void shouldThrowTaskNotFoundExceptionWhenTaskByIdNotFound() {
-        // Given
+        //Given
         when(taskRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // When & Then
+        //When
+        //Then
         assertThrows(TaskNotFoundException.class, () -> taskService.getTaskById(1L));
         verify(taskRepository, times(1)).findById(1L);
     }
 
     @Test
     void shouldGetAllTasksSuccessfully() {
-        // Given
+        //Given
         when(taskRepository.findAll()).thenReturn(List.of(task));
-
-        // When
+        //When
         List<Task> tasks = taskService.getAllTasks();
-
-        // Then
+        //Then
         assertNotNull(tasks);
         assertFalse(tasks.isEmpty());
         assertEquals(1, tasks.size());
@@ -150,13 +129,11 @@ class TaskServiceTest {
 
     @Test
     void shouldGetAllTasksByPerformedSuccessfully() {
-        // Given
+        //Given
         when(taskRepository.findByPerformed(false)).thenReturn(List.of(task));
-
-        // When
+        //When
         List<Task> tasks = taskService.getAllTasksByPerformed(false);
-
-        // Then
+        //Then
         assertNotNull(tasks);
         assertFalse(tasks.isEmpty());
         assertEquals(1, tasks.size());

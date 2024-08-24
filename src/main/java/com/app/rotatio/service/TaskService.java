@@ -19,8 +19,7 @@ public class TaskService {
 
     public Task saveTask(final Task task) throws TaskAlreadyExistsException {
         boolean taskExists = getAllTasks().stream()
-                .anyMatch(t -> t.getName().equals(task.getName()));
-
+                .anyMatch(t -> t.getName().equals(task.getName()) && !t.getId().equals(task.getId()));
         if (taskExists) {
             throw new TaskAlreadyExistsException();
         } else {
@@ -37,12 +36,6 @@ public class TaskService {
         }
     }
 
-    public Task updatePerformed(final Long id, final boolean performed) throws TaskNotFoundException {
-        Task taskById = getTaskById(id);
-        taskById.setPerformed(performed);
-        return taskRepository.save(taskById);
-    }
-
     public Task getTaskById(final long id) throws TaskNotFoundException {
         return taskRepository.findById(id).orElseThrow(TaskNotFoundException::new);
     }
@@ -53,5 +46,9 @@ public class TaskService {
 
     public List<Task> getAllTasksByPerformed(boolean performed) {
         return taskRepository.findByPerformed(performed);
+    }
+
+    public void tempDelete() {
+        taskRepository.deleteAll();
     }
 }

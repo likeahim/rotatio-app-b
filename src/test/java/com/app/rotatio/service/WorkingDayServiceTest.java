@@ -104,7 +104,7 @@ class WorkingDayServiceTest {
     @Test
     void shouldGetByExecuteDate() throws WorkingDayNotFoundException {
         //Given
-        when(workingDayRepository.findByExecuteDate(workingDay.getExecuteDate())).thenReturn(workingDay);
+        when(workingDayRepository.findByExecuteDate(workingDay.getExecuteDate())).thenReturn(Optional.ofNullable(workingDay));
         //When
         WorkingDay foundWorkingDay = workingDayService.getByExecuteDate(workingDay.getExecuteDate());
         //Then
@@ -143,18 +143,6 @@ class WorkingDayServiceTest {
         when(workingDayRepository.findByPlanned(true)).thenReturn(List.of(workingDay));
         //When
         List<WorkingDay> workingDays = workingDayService.getAllByPlanned(true);
-        //Then
-        assertNotNull(workingDays);
-        assertEquals(1, workingDays.size());
-    }
-
-    @Test
-    void shouldGetAllByExecuteDateBefore() {
-        //Given
-        LocalDate date = LocalDate.of(2024, 1, 1);
-        when(workingDayRepository.findByExecuteDateBefore(date)).thenReturn(List.of(workingDay));
-        //When
-        List<WorkingDay> workingDays = workingDayService.getAllByExecuteDateBefore(date);
         //Then
         assertNotNull(workingDays);
         assertEquals(1, workingDays.size());

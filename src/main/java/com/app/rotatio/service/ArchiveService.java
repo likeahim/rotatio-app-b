@@ -8,6 +8,8 @@ import com.app.rotatio.repository.ArchiveRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ArchiveService {
@@ -19,19 +21,33 @@ public class ArchiveService {
         return archiveRepository.save(archive);
     }
 
+    public List<Archive> getAllArchives() {
+        return archiveRepository.findAll();
+    }
+
     public Archive getArchiveById(final Long id) throws ArchiveNotFoundException {
         return archiveRepository.findById(id).orElseThrow(ArchiveNotFoundException::new);
+    }
+
+    public Archive getArchiveByWorkingDay(final Long id) {
+        return archiveRepository.findByWorkingDayId(id);
     }
 
     public void deleteArchiveById(final Long id) {
         archiveRepository.deleteById(id);
     }
 
-    public Archive archive(final Long workingDayId) throws WorkingDayNotFoundException, ArchiveProcessException {
+    public Archive archive(final Long workingDayId) throws ArchiveProcessException {
         StringBuilder builder = new StringBuilder();
-
         try {
             WorkingDay workingDay = workingDayService.getWorkingDayById(workingDayId);
+            if (workingDay.isArchived()) {
+                throw new WorkingDayAlreadyArchivedException();
+            } else if (!workingDay.isPlanned()) {
+                throw new UnplannedWorkingDayArchiveProcessException(
+                        "This plan ist still unplanned, archive process failed"
+                );
+            }
             for (Worker worker : workingDay.getWorkers()) {
                 String workerData = worker.getFirstName() + " " + worker.getLastName() +
                                     ", " + worker.getTask().getName() +
@@ -48,10 +64,11 @@ public class ArchiveService {
                     .workingDayId(workingDayId)
                     .workersData(workersData)
                     .build();
-
+            workingDay.setArchived(true);
+            workingDayService.saveWorkingDay(workingDay);
             return saveArchive(archive);
         } catch (Exception e) {
-            throw new ArchiveProcessException("Failed to archive WorkingDay ID: " + workingDayId);
+            throw new ArchiveProcessException(e.getMessage());
         }
     }
 }

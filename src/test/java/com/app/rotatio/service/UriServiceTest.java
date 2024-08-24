@@ -17,57 +17,57 @@ class UriServiceTest {
 
     @Test
     void shouldReturnContentTypeHeader() {
-        // Given
+        //Given
         MediaType mediaType = MediaType.APPLICATION_JSON;
-        // When
+        //When
         HttpHeaders headers = uriService.getContentTypeHeader(mediaType);
-        // Then
+        //Then
         assertNotNull(headers);
         assertEquals(MediaType.APPLICATION_JSON, headers.getContentType());
     }
 
     @Test
     void shouldReturnTokenHeader() {
-        // Given
+        //Given
         String tokenName = "Authorization";
         String token = "Bearer abc123";
-        // When
+        //When
         HttpHeaders headers = uriService.getTokenHeader(tokenName, token);
-        // Then
+        //Then
         assertNotNull(headers);
         assertEquals("Bearer abc123", headers.getFirst(tokenName));
     }
 
     @Test
     void shouldReturnExtendedUri() {
-        // Given
+        //Given
         String baseUri = "http://localhost:8080/api";
         String path = "/v1/rotatio";
-        // When
+        //When
         URI result = uriService.getExtendedUri(baseUri, path);
-        // Then
+        //Then
         assertNotNull(result);
         assertEquals("http://localhost:8080/api/v1/rotatio", result.toString());
     }
 
     @Test
     void shouldReturnUri() {
-        // Given
+        //Given
         String url = "http://localhost:8080/api";
-        // When
+        //When
         URI result = uriService.getUri(url);
-        // Then
+        //Then
         assertNotNull(result);
         assertEquals("http://localhost:8080/api", result.toString());
     }
 
     @Test
     void shouldEncodeString() {
-        // Given
+        //Given
         String input = "api/v1/rotatio";
-        // When
+        //When
         String result = uriService.encode(input);
-        // Then
+        //Then
         assertNotNull(result);
         assertEquals("api%2Fv1%2Frotatio", result);
     }

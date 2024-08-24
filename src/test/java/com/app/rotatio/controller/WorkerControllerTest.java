@@ -71,11 +71,12 @@ public class WorkerControllerTest {
 
     @Test
     void shouldCreateWorker() throws Exception {
-
+        //Given
         when(workerMapper.mapToWorker(workerDto)).thenReturn(worker);
         when(workerService.saveWorker(any(Worker.class))).thenReturn(worker);
         when(workerMapper.mapToWorkerDto(any(Worker.class))).thenReturn(workerDto);
-
+        //When
+        //Then
         mockMvc.perform(post("/v1/rotatio/workers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
@@ -85,7 +86,7 @@ public class WorkerControllerTest {
 
     @Test
     void shouldUpdateWorker() throws Exception {
-
+        //Given
         worker.setFirstName("Mark");
         WorkerDto updated = workerDto = new WorkerDto(
                 1L, 11L, "Mark", "Smith", 1, null,
@@ -95,7 +96,8 @@ public class WorkerControllerTest {
         when(workerMapper.mapToWorker(workerDto)).thenReturn(worker);
         when(workerService.saveWorker(any(Worker.class))).thenReturn(worker);
         when(workerMapper.mapToWorkerDto(any(Worker.class))).thenReturn(updated);
-
+        //When
+        //Then
         mockMvc.perform(put("/v1/rotatio/workers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updatedJson))
@@ -105,10 +107,11 @@ public class WorkerControllerTest {
 
     @Test
     void shouldUpdateWorkerStatus() throws Exception {
-
+        //Given
         when(workerService.updateStatus(anyLong(), anyInt())).thenReturn(worker);
         when(workerMapper.mapToWorkerDto(any(Worker.class))).thenReturn(workerDto);
-
+        //When
+        //Then
         mockMvc.perform(patch("/v1/rotatio/workers/updateStatus/1/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(1));
@@ -116,14 +119,15 @@ public class WorkerControllerTest {
 
     @Test
     void shouldDeleteWorker() throws Exception {
-
+        //Given
         WorkerDto unemployed = new WorkerDto(
                 1L, 11L, "Mark", "Smith", 3, null,
                 null, 1L, 1L, 1L
         );
         when(workerService.deleteWorker(anyLong())).thenReturn(worker);
         when(workerMapper.mapToWorkerDto(any(Worker.class))).thenReturn(unemployed);
-
+        //When
+        //Then
         mockMvc.perform(delete("/v1/rotatio/workers/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(3));
@@ -131,10 +135,11 @@ public class WorkerControllerTest {
 
     @Test
     void shouldGetAllWorkers() throws Exception {
-
+        //Given
         when(workerService.getAllWorkers()).thenReturn(workers);
         when(workerMapper.mapToWorkerDtoList(any())).thenReturn(workerDtos);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workers"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("John"))
@@ -143,10 +148,11 @@ public class WorkerControllerTest {
 
     @Test
     void shouldGetWorkerById() throws Exception {
-
+        //Given
         when(workerService.getWorkerById(anyLong())).thenReturn(worker);
         when(workerMapper.mapToWorkerDto(any(Worker.class))).thenReturn(workerDto);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workers/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.lastname").value("Smith"));
@@ -154,12 +160,12 @@ public class WorkerControllerTest {
 
     @Test
     void shouldGetWorkersByStatus() throws Exception {
-
+        //Given
         String date = LocalDate.now().toString();
-
         when(workerService.getWorkersByStatus(anyInt())).thenReturn(workers);
         when(workerMapper.mapToWorkerDtoList(any())).thenReturn(workerDtos);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workers/byStatus/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].status").value(1))
@@ -173,12 +179,13 @@ public class WorkerControllerTest {
 
     @Test
     void shouldGetWorkersByPresenceBefore() throws Exception {
-
+        //Given
         when(workerService.getWorkersByPresenceFromBefore(any(LocalDate.class))).thenReturn(workers);
         when(workerMapper.mapToWorkerDtoList(any())).thenReturn(workerDtos);
         String date = LocalDate.now().toString();
         String datePlusFive = LocalDate.now().plusDays(5).toString();
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workers/byPresenceBefore/" + datePlusFive))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].presenceFrom").value(date))
@@ -187,13 +194,13 @@ public class WorkerControllerTest {
 
     @Test
     void shouldGetWorkersByAbsenceFrom() throws Exception {
-
+        //Given
         when(workerService.getWorkersByPresenceTo(any(LocalDate.class))).thenReturn(workers);
         when(workerMapper.mapToWorkerDtoList(any())).thenReturn(workerDtos);
-
         String date = LocalDate.now().toString();
         String datePlusFive = LocalDate.now().plusDays(5).toString();
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workers/byAbsenceFrom/" + datePlusFive))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].absenceFrom").value(date));
@@ -201,21 +208,23 @@ public class WorkerControllerTest {
 
     @Test
     void shouldGetWorkersByWorkingDay() throws Exception {
-
+        //Given
         when(workerService.getWorkersByWorkingDay(anyLong())).thenReturn(workers);
         when(workerMapper.mapToWorkerDtoList(any())).thenReturn(workerDtos);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workers/byWorkingDay/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value("John"))
                 .andExpect(jsonPath("$[0].id").value(1));
     }
 
-    // Exception handling tests
     @Test
     void shouldReturnNotFoundWhenWorkerDoesNotExist() throws Exception {
+        //Given
         when(workerService.getWorkerById(1L)).thenThrow(new WorkerNotFoundException());
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workers/1"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Such a worker not found"));
@@ -223,6 +232,9 @@ public class WorkerControllerTest {
 
     @Test
     void shouldReturnBadRequestWhenInvalidInput() throws Exception {
+        //Given
+        //When
+        //Then
         mockMvc.perform(post("/v1/rotatio/workers")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -230,8 +242,10 @@ public class WorkerControllerTest {
 
     @Test
     void shouldHandleServiceException() throws Exception {
+        //Given
         when(workerService.getWorkerById(anyLong())).thenThrow(new RuntimeException("Unexpected error"));
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workers/1"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string("Unexpected error"));

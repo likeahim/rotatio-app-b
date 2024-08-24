@@ -13,9 +13,11 @@ public class BackendlessMapper {
 
     public User mapBackendlessToUser(BackendlessUser backendlessUser) {
         return User.builder()
+                .id(backendlessUser.getId())
                 .firstName(backendlessUser.getFirstName())
-                .lastname(backendlessUser.getLastName())
+                .lastname(backendlessUser.getLastname())
                 .email(backendlessUser.getEmail())
+                .password(backendlessUser.getPassword())
                 .objectId(backendlessUser.getObjectId())
                 .userStatus(backendlessUser.getUserStatus())
                 .userToken(backendlessUser.getUserToken() != null ? backendlessUser.getUserToken() : null)
@@ -25,9 +27,11 @@ public class BackendlessMapper {
 
     public BackendlessUser mapToBackendlessUser(User user) {
         return BackendlessUser.builder()
+                .id(user.getId())
                 .firstName(user.getFirstName())
-                .lastName(user.getLastname())
+                .lastname(user.getLastname())
                 .email(user.getEmail())
+                .password(user.getPassword())
                 .objectId(user.getObjectId())
                 .userToken(user.getUserToken() != null ? user.getUserToken() : null)
                 .userStatus(user.getUserStatus())

@@ -69,11 +69,12 @@ public class TaskControllerTest {
 
     @Test
     void shouldCreateTask() throws Exception {
-
+        //Given
         when(taskMapper.mapToTask(any(TaskDto.class))).thenReturn(task);
         when(taskService.saveTask(any(Task.class))).thenReturn(task);
         when(taskMapper.mapToTaskDto(any(Task.class))).thenReturn(taskDto);
-
+        //When
+        //Then
         mockMvc.perform(post("/v1/rotatio/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
@@ -84,10 +85,11 @@ public class TaskControllerTest {
 
     @Test
     void shouldGetAllTasks() throws Exception {
-
+        //Given
         when(taskService.getAllTasks()).thenReturn(Collections.singletonList(new Task()));
         when(taskMapper.mapToTaskDtoList(any(List.class))).thenReturn(taskDtos);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/tasks"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
@@ -96,10 +98,11 @@ public class TaskControllerTest {
 
     @Test
     void shouldGetTaskById() throws Exception {
-
+        //Given
         when(taskService.getTaskById(1L)).thenReturn(task);
         when(taskMapper.mapToTaskDto(task)).thenReturn(taskDto);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/tasks/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
@@ -108,12 +111,13 @@ public class TaskControllerTest {
 
     @Test
     void shouldDeleteTask() throws Exception {
+        //Given
         TaskDto deleted = new TaskDto(1L, "Testing", "Test description", false);
-
         when(taskService.getTaskById(1L)).thenReturn(task);
         when(taskService.delete(task)).thenReturn(task);
         when(taskMapper.mapToTaskDto(task)).thenReturn(deleted);
-
+        //When
+        //Then
         mockMvc.perform(delete("/v1/rotatio/tasks/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
@@ -122,12 +126,14 @@ public class TaskControllerTest {
 
     @Test
     void shouldUpdateTask() throws Exception {
+        //Given
         TaskDto updated = new TaskDto(1L, "Updated", "Updated description", false);
         String updatedJson = mapper.writeValueAsString(updated);
         when(taskMapper.mapToTask(any(TaskDto.class))).thenReturn(task);
         when(taskService.saveTask(any(Task.class))).thenReturn(task);
         when(taskMapper.mapToTaskDto(any(Task.class))).thenReturn(updated);
-
+        //When
+        //Then
         mockMvc.perform(put("/v1/rotatio/tasks/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updatedJson))
@@ -137,27 +143,12 @@ public class TaskControllerTest {
     }
 
     @Test
-    void shouldUpdatePerformedTask() throws Exception {
-        TaskDto updatedByPerformed = new TaskDto(1L, "Testing", "Test description", true);
-        String performedUpdated = mapper.writeValueAsString(updatedByPerformed);
-
-        when(taskService.updatePerformed(1L, true)).thenReturn(task);
-        when(taskMapper.mapToTaskDto(task)).thenReturn(updatedByPerformed);
-
-        mockMvc.perform(patch("/v1/rotatio/tasks/updatePerformed/1/true")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(performedUpdated))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.isPerformed").value(true));
-    }
-
-    @Test
     void shouldGetTasksByPerformed() throws Exception {
-
+        //Given
         when(taskService.getAllTasksByPerformed(true)).thenReturn(Collections.singletonList(new Task()));
         when(taskMapper.mapToTaskDtoList(any(List.class))).thenReturn(taskDtos);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/tasks/byPerformed/false"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
@@ -166,8 +157,10 @@ public class TaskControllerTest {
 
     @Test
     void shouldReturnNotFoundWhenTaskDoesNotExist() throws Exception {
+        //Given
         when(taskService.getTaskById(1L)).thenThrow(new TaskNotFoundException());
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/tasks/1"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Such a task not found"));
@@ -175,8 +168,11 @@ public class TaskControllerTest {
 
     @Test
     void shouldReturnBadRequestWhenCreatingTaskWithInvalidData() throws Exception {
+        //Given
         TaskDto invalid = new TaskDto(1L, null, "Test description", false);
         String invalidJson = mapper.writeValueAsString(invalid);
+        //When
+        //Then
         mockMvc.perform(post("/v1/rotatio/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidJson))
@@ -185,9 +181,11 @@ public class TaskControllerTest {
 
     @Test
     void shouldReturnBadRequestWhenUpdatingTaskWithInvalidData() throws Exception {
+        //Given
         TaskDto invalid = new TaskDto(1L, null, "Test description", false);
         String invalidJson = mapper.writeValueAsString(invalid);
-
+        //When
+        //Then
         mockMvc.perform(put("/v1/rotatio/tasks/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidJson))

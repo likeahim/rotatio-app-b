@@ -39,14 +39,12 @@ class TimeApiServiceTest {
 
     @Test
     void shouldReturnAvailableZones() {
-        // Given
+        //Given
         List<String> zones = List.of("Europe/Warsaw", "America/New_York", "Asia/Tokyo");
         when(client.getZones()).thenReturn(zones);
-
-        // When
+        //When
         List<String> result = timeApiService.getAvailableZones();
-
-        // Then
+        //Then
         assertNotNull(result);
         assertEquals(3, result.size());
         assertEquals("Europe/Warsaw", result.get(0));
@@ -55,14 +53,12 @@ class TimeApiServiceTest {
 
     @Test
     void shouldReturnCurrentTimeForZone() {
-        // Given
+        //Given
         String zone = "Europe/Warsaw";
         when(client.getCurrentTimeByZone(zone)).thenReturn(timeApiCurrent);
-
-        // When
+        //When
         TimeApiCurrent result = timeApiService.getCurrentTime(zone);
-
-        // Then
+        //Then
         String today = LocalDate.now().toString();
         assertNotNull(result);
         assertEquals(today, result.getDate());
@@ -71,14 +67,12 @@ class TimeApiServiceTest {
 
     @Test
     void shouldReturnExactDateForZone() {
-        // Given
+        //Given
         String zone = "Europe/Warsaw";
         when(client.getCurrentTimeByZone(zone)).thenReturn(timeApiCurrent);
-
-        // When
+        //When
         String result = timeApiService.getExactDate(zone);
-
-        // Then
+        //Then
         String today = LocalDate.now().toString();
         assertNotNull(result);
         assertEquals(today, result);

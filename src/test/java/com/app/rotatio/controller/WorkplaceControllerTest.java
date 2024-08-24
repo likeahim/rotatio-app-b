@@ -66,11 +66,12 @@ public class WorkplaceControllerTest {
 
     @Test
     void shouldCreateWorkplace() throws Exception {
-
+        //Given
         when(workplaceMapper.mapToWorkplace(any(WorkplaceDto.class))).thenReturn(workplace);
         when(workplaceService.saveWorkplace(any(Workplace.class))).thenReturn(workplace);
         when(workplaceMapper.mapToWorkplaceDto(any(Workplace.class))).thenReturn(workplaceDto);
-
+        //When
+        //Then
         mockMvc.perform(post("/v1/rotatio/workplaces")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
@@ -81,12 +82,13 @@ public class WorkplaceControllerTest {
 
     @Test
     void shouldUpdateWorkplace() throws Exception {
-
+        //Given
         WorkplaceDto updatedWorkplaceDto = new WorkplaceDto(1L, "Test", false, true);
         when(workplaceMapper.mapToWorkplace(any(WorkplaceDto.class))).thenReturn(workplace);
         when(workplaceService.saveWorkplace(any(Workplace.class))).thenReturn(workplace);
         when(workplaceMapper.mapToWorkplaceDto(any(Workplace.class))).thenReturn(updatedWorkplaceDto);
-
+        //When
+        //Then
         mockMvc.perform(put("/v1/rotatio/workplaces")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
@@ -97,11 +99,13 @@ public class WorkplaceControllerTest {
 
     @Test
     void shouldDeleteWorkplace() throws Exception {
+        //Given
         WorkplaceDto afterDelete = new WorkplaceDto(1L, "Test", false, false);
         when(workplaceService.getWorkplaceById(anyLong())).thenReturn(workplace);
         when(workplaceService.deleteWorkplace(any(Workplace.class))).thenReturn(workplace);
         when(workplaceMapper.mapToWorkplaceDto(any(Workplace.class))).thenReturn(afterDelete);
-
+        //When
+        //Then
         mockMvc.perform(delete("/v1/rotatio/workplaces/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.active").value(false))
@@ -110,10 +114,11 @@ public class WorkplaceControllerTest {
 
     @Test
     void shouldGetAllWorkplaces() throws Exception {
-
+        //Given
         when(workplaceService.getAllWorkplaces()).thenReturn(workplaces);
         when(workplaceMapper.mapToWorkplaceDtoList(any())).thenReturn(workplaceDtos);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workplaces"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].designation").value("Test"))
@@ -122,10 +127,11 @@ public class WorkplaceControllerTest {
 
     @Test
     void shouldGetWorkplaceById() throws Exception {
-
+        //Given
         when(workplaceService.getWorkplaceById(anyLong())).thenReturn(workplace);
         when(workplaceMapper.mapToWorkplaceDto(any(Workplace.class))).thenReturn(workplaceDto);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workplaces/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
@@ -133,10 +139,11 @@ public class WorkplaceControllerTest {
 
     @Test
     void shouldGetWorkplacesByActive() throws Exception {
-
+        //Given
         when(workplaceService.getAllByActive(anyBoolean())).thenReturn(workplaces);
         when(workplaceMapper.mapToWorkplaceDtoList(any())).thenReturn(workplaceDtos);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workplaces/byActive/true"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].active").value(true));
@@ -144,10 +151,11 @@ public class WorkplaceControllerTest {
 
     @Test
     void shouldGetWorkplacesByNowUsed() throws Exception {
-
+        //Given
         when(workplaceService.getAllByNowUsed(anyBoolean())).thenReturn(workplaces);
         when(workplaceMapper.mapToWorkplaceDtoList(any())).thenReturn(workplaceDtos);
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workplaces/byNowUsed/true"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].nowUsed").value(true));
@@ -156,8 +164,10 @@ public class WorkplaceControllerTest {
     // Exception handling tests
     @Test
     void shouldReturnNotFoundWhenWorkplaceDoesNotExist() throws Exception {
+        //Given
         when(workplaceService.getWorkplaceById(1L)).thenThrow(new WorkplaceNotFoundException());
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workplaces/1"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Such a workplace not found"));
@@ -165,8 +175,11 @@ public class WorkplaceControllerTest {
 
     @Test
     void shouldReturnBadRequestWhenInvalidInput() throws Exception {
+        //Given
         Workplace invalid = Workplace.builder().build();
         String invalidJson = mapper.writeValueAsString(invalid);
+        //When
+        //Then
         mockMvc.perform(post("/v1/rotatio/workplaces")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidJson))
@@ -175,8 +188,10 @@ public class WorkplaceControllerTest {
 
     @Test
     void shouldHandleServiceException() throws Exception {
+        //Given
         when(workplaceService.getWorkplaceById(anyLong())).thenThrow(new RuntimeException("Unexpected error"));
-
+        //When
+        //Then
         mockMvc.perform(get("/v1/rotatio/workplaces/1"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string("Unexpected error"));

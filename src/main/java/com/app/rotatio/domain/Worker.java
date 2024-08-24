@@ -41,7 +41,7 @@ public class Worker {
     @Column(name = "ABSENCE_FROM")
     private LocalDate absenceFrom;
 
-    @ManyToOne //a może manytomany?
+    @ManyToOne
     @JoinColumn(name = "WORKING_DAY_ID")
     private WorkingDay workingDay;
 

@@ -43,4 +43,11 @@ public class BackendlessService {
         log.info("Deleting user with id " + objectId);
         return backendlessClient.deleteUser(objectId);
     }
+
+    public BackendlessUser update(BackendlessUser user) {
+        log.info("Updating user " + user.getEmail());
+        return backendlessClient.update(user);
+    }
+
+
 }

@@ -53,7 +53,7 @@ public class WorkingDayService {
     }
 
     public WorkingDay getByExecuteDate(final LocalDate executeDate) throws WorkingDayNotFoundException {
-        return workingDayRepository.findByExecuteDate(executeDate);
+        return workingDayRepository.findByExecuteDate(executeDate).orElseThrow(WorkingDayNotFoundException::new);
     }
 
     public List<WorkingDay> getAllWorkingDays() {
@@ -69,8 +69,8 @@ public class WorkingDayService {
         return workingDayRepository.findByPlanned(planned);
     }
 
-    public List<WorkingDay> getAllByExecuteDateBefore(final LocalDate date) {
-        return workingDayRepository.findByExecuteDateBefore(date);
+    public List<WorkingDay> getAllByArchived(final boolean archived) {
+        return workingDayRepository.findByArchived(archived);
     }
 
     public void deleteAll() {

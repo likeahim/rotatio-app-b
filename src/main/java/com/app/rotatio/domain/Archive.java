@@ -27,6 +27,5 @@ public class Archive {
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Column(name = "WORKERS_DATA", nullable = false)
     private String workersData;
 }

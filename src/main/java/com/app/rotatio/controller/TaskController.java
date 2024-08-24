@@ -63,10 +63,9 @@ public class TaskController {
         return ResponseEntity.ok(taskMapper.mapToTaskDto(saved));
     }
 
-    @SneakyThrows
-    @PatchMapping(value = "/updatePerformed/{taskId}/{performed}")
-    public ResponseEntity<TaskDto> updatePerformedTask(@PathVariable Long taskId, @PathVariable boolean performed) {
-        Task task = taskService.updatePerformed(taskId, performed);
-        return ResponseEntity.ok(taskMapper.mapToTaskDto(task));
+    @DeleteMapping(value = "/all")
+    public ResponseEntity<Void> deleteAll() {
+        taskService.tempDelete();
+        return ResponseEntity.noContent().build();
     }
 }

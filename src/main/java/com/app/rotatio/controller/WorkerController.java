@@ -105,5 +105,4 @@ public class WorkerController {
         List<Worker> workers = workerService.getWorkersByWorkingDay(workingDayId);
         return ResponseEntity.ok(workerMapper.mapToWorkerDtoList(workers));
     }
-
 }

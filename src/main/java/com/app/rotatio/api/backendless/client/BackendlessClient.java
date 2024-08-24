@@ -36,7 +36,7 @@ public class BackendlessClient {
         }
     }
 
-    public BackendlessUser loginUser(BackendlessLoginUser userToLogin) throws UserLoginProcessException {
+    public BackendlessUser loginUser(final BackendlessLoginUser userToLogin) throws UserLoginProcessException {
         try {
             URI uri = uriService.getExtendedUri(config.getBackendlessApiSubEndpoint(), "/users/login");
             HttpHeaders headers = uriService.getContentTypeHeader(MediaType.APPLICATION_JSON);
@@ -47,25 +47,33 @@ public class BackendlessClient {
         }
     }
 
-    public void logoutUser(BackendlessUser user) {
+    public void logoutUser(final BackendlessUser user) {
         URI uri = uriService.getExtendedUri(config.getBackendlessApiSubEndpoint(), "/users/logout");
         HttpHeaders headers = uriService.getTokenHeader("user-token", user.getUserToken());
         HttpEntity<String> request = new HttpEntity<>(headers);
         restTemplate.exchange(uri, HttpMethod.GET, request, Void.class);
     }
 
-    public BackendlessUser fetchUserById(String objectId) {
+    public BackendlessUser fetchUserById(final String objectId) {
         URI uri = uriService.getExtendedUri(config.getBackendlessApiSubEndpoint(), "/data/users/" + objectId);
         return restTemplate.getForObject(uri, BackendlessUser.class);
     }
 
-    public void restorePassword(String email) {
+    public void restorePassword(final String email) {
         URI uri = uriService.getExtendedUri(config.getBackendlessApiSubEndpoint(), "/users/restorepassword/" + email);
         restTemplate.exchange(uri, HttpMethod.GET, null, Void.class);
     }
 
-    public Object deleteUser(String objectId) {
+    public Object deleteUser(final String objectId) {
         URI uri = uriService.getExtendedUri(config.getBackendlessApiSubEndpoint(), "/data/users/" + objectId);
         return restTemplate.exchange(uri, HttpMethod.DELETE, null, Object.class);
+    }
+
+    public BackendlessUser update(final BackendlessUser user) {
+        URI uri = uriService.getExtendedUri(config.getBackendlessApiSubEndpoint(), "/users/" + user.getObjectId());
+        HttpHeaders headers = uriService.getContentTypeHeader(MediaType.APPLICATION_JSON);
+        headers.add("user-token", user.getUserToken());
+        HttpEntity<BackendlessUser> request = new HttpEntity<>(user, headers);
+        return restTemplate.exchange(uri, HttpMethod.PUT, request, BackendlessUser.class).getBody();
     }
 }

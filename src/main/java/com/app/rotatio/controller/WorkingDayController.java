@@ -65,6 +65,12 @@ public class WorkingDayController {
         return ResponseEntity.ok(workingDayMapper.mapToWorkingDayDto(byExecuteDate));
     }
 
+    @GetMapping(value = "byArchived/{archived}")
+    public ResponseEntity<List<WorkingDayDto>> getWorkingDaysByArchived(@PathVariable boolean archived) {
+        List<WorkingDay> allByArchived = workingDayService.getAllByArchived(archived);
+        return ResponseEntity.ok(workingDayMapper.mapToWorkingDayDtoList(allByArchived));
+    }
+
     @SneakyThrows
     @PutMapping
     public ResponseEntity<WorkingDayDto> updateWorkingDay(@Validated @RequestBody WorkingDayDto workingDayDto) {
@@ -77,10 +83,4 @@ public class WorkingDayController {
         workingDayService.deleteById(workingDayId);
         return ResponseEntity.ok().build();
     }
-//    @SneakyThrows
-//    @PostMapping(value = "/archive/{workingDayId}")
-//    public ResponseEntity<WorkingDayDto> archiveWorkingDay(@PathVariable("workingDayId") Long workingDayId) {
-//        WorkingDay archived = workingDayService.cloneAndSaveWorkingDay(workingDayId);
-//        return ResponseEntity.ok(workingDayMapper.mapToWorkingDayDto(archived));
-//    }
 }

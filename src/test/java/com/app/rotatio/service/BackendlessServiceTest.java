@@ -46,13 +46,11 @@ class BackendlessServiceTest {
 
     @Test
     void shouldRegisterUserSuccessfully() {
-        // Given
+        //Given
         when(backendlessClient.registerUser(any(BackendlessUser.class))).thenReturn(user);
-
-        // When
+        //When
         BackendlessUser registeredUser = backendlessService.registerUser(user);
-
-        // Then
+        //Then
         assertNotNull(registeredUser);
         assertEquals("test@example.com", registeredUser.getEmail());
         verify(backendlessClient, times(1)).registerUser(user);
@@ -61,6 +59,7 @@ class BackendlessServiceTest {
 
     @Test
     void shouldFailToRegisterUserWithoudEmail() {
+        //Given
         BackendlessUser invalidUser = BackendlessUser.builder()
                 .email(null)
                 .password("password")
@@ -68,7 +67,8 @@ class BackendlessServiceTest {
         when(backendlessClient.registerUser(invalidUser)).thenThrow(
                 new UserRegisterProcessException("Missing email to register"));
 
-        // When & Then
+        //When
+        //Then
         assertThrows(UserRegisterProcessException.class, () -> {
             backendlessService.registerUser(invalidUser);
         });
@@ -76,13 +76,11 @@ class BackendlessServiceTest {
 
     @Test
     void shouldLoginUserSuccessfully() throws UserLoginProcessException {
-        // Given
+        //Given
         when(backendlessClient.loginUser(any(BackendlessLoginUser.class))).thenReturn(user);
-
-        // When
+        //When
         BackendlessUser loggedInUser = backendlessService.loginUser(loginUser);
-
-        // Then
+        //Then
         assertNotNull(loggedInUser);
         assertEquals("test@example.com", loggedInUser.getEmail());
         verify(backendlessClient, times(1)).loginUser(loginUser);
@@ -91,14 +89,14 @@ class BackendlessServiceTest {
 
     @Test
     void shouldFailToLoginWhenEmailIsNull() throws UserLoginProcessException {
-        // Given
+        //Given
         BackendlessLoginUser invalidUser = BackendlessLoginUser.builder()
                 .login(null)
                 .password("password")
                 .build();
         when(backendlessClient.loginUser(invalidUser)).thenThrow(new UserLoginProcessException());
-
-        // When & Then
+        //When
+        //Then
         assertThrows(UserLoginProcessException.class, () -> {
             backendlessService.loginUser(invalidUser);
         });
@@ -106,23 +104,20 @@ class BackendlessServiceTest {
 
     @Test
     void shouldLogoutUserSuccessfully() {
-        // When
+        //When
         backendlessService.logoutUser(user);
-
-        // Then
+        //Then
         verify(backendlessClient, times(1)).logoutUser(user);
         log.info("User logged out successfully in test.");
     }
 
     @Test
     void shouldGetUserSuccessfully() {
-        // Given
+        //Given
         when(backendlessClient.fetchUserById("123")).thenReturn(user);
-
-        // When
+        //When
         BackendlessUser fetchedUser = backendlessService.getUser("123");
-
-        // Then
+        //Then
         assertNotNull(fetchedUser);
         assertEquals("test@example.com", fetchedUser.getEmail());
         verify(backendlessClient, times(1)).fetchUserById("123");
@@ -130,23 +125,20 @@ class BackendlessServiceTest {
 
     @Test
     void shouldRestorePasswordSuccessfully() {
-        // When
+        //When
         backendlessService.restorePassword("test@example.com");
-
-        // Then
+        //Then
         verify(backendlessClient, times(1)).restorePassword("test@example.com");
         log.info("Password restored successfully in test.");
     }
 
     @Test
     void shouldDeleteUserSuccessfully() {
-        // Given
+        //Given
         when(backendlessClient.deleteUser("123")).thenReturn(true);
-
-        // When
+        //When
         Object result = backendlessService.deleteUser("123");
-
-        // Then
+        //Then
         assertNotNull(result);
         assertTrue((Boolean) result);
         verify(backendlessClient, times(1)).deleteUser("123");

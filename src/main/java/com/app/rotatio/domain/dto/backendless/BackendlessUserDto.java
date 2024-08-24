@@ -10,7 +10,7 @@ public record BackendlessUserDto(
         @JsonProperty("firstName")
         String firstName,
         @JsonProperty("lastName")
-        String lastName,
+        String lastname,
         @JsonProperty("objectId")
         String objectId,
         @JsonProperty("user-token")

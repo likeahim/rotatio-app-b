@@ -9,4 +9,5 @@ import javax.transaction.Transactional;
 @Transactional
 @Repository
 public interface ArchiveRepository extends JpaRepository<Archive, Long> {
+    Archive findByWorkingDayId(Long workingDayId);
 }

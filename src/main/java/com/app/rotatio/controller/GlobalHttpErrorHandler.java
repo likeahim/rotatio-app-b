@@ -89,4 +89,9 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleUserLoginProcessException(UserLoginProcessException ex) {
         return new ResponseEntity<>("Failed to login", HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(UnplannedWorkingDayArchiveProcessException.class)
+    public ResponseEntity<Object> handleUnplannedWorkingDayArchiveProcessException(UnplannedWorkingDayArchiveProcessException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
 }
