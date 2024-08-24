@@ -16,8 +16,6 @@ public record WorkerDto(
         String lastname,
         @NotNull
         int status,
-        LocalDate presenceFrom,
-        LocalDate absenceFrom,
         Long workingDayId,
         Long taskId,
         Long workplaceId
@@ -33,14 +31,12 @@ public record WorkerDto(
                Objects.equals(firstName, workerDto.firstName) &&
                Objects.equals(workplaceId, workerDto.workplaceId) &&
                Objects.equals(workerNumber, workerDto.workerNumber) &&
-               Objects.equals(workingDayId, workerDto.workingDayId) &&
-               Objects.equals(absenceFrom, workerDto.absenceFrom) &&
-               Objects.equals(presenceFrom, workerDto.presenceFrom);
+               Objects.equals(workingDayId, workerDto.workingDayId);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, workerNumber, firstName, lastname, status,
-                presenceFrom, absenceFrom, workingDayId, taskId, workplaceId);
+                workingDayId, taskId, workplaceId);
     }
 }

@@ -64,13 +64,10 @@ class WorkerEntityTests {
             workerRepository.save(worker);
             worker.setStatus(WorkerStatus.ABSENT);
             worker.setLastName("Updater");
-            worker.setAbsenceFrom(LocalDate.now());
-            worker.setPresenceFrom(LocalDate.now().plusDays(5));
             //When
             workerRepository.save(worker);
             //Then
-            assertEquals(LocalDate.now(), worker.getAbsenceFrom());
-            assertEquals(LocalDate.now().plusDays(5), worker.getPresenceFrom());
+
             assertNotEquals("Smith", worker.getLastName());
             assertEquals(WorkerStatus.ABSENT, worker.getStatus());
         }
@@ -141,42 +138,6 @@ class WorkerEntityTests {
                 assertFalse(allByStatus.isEmpty());
                 assertEquals(2, allByStatus.size());
                 assertTrue(allByStatus.contains(worker));
-            }
-
-            @Test
-            void shouldFetchWorkerListByPresenceFromBeforeDate() {
-                //Given
-                worker.setPresenceFrom(LocalDate.now().plusDays(10));
-                secondWorker.setPresenceFrom(LocalDate.now().plusDays(5));
-                workerRepository.save(worker);
-                workerRepository.save(secondWorker);
-                //When
-                List<Worker> allByPresenceFrom = workerRepository.findAllByPresenceFromBefore(LocalDate.now().plusDays(8));
-                //Then
-                assertFalse(allByPresenceFrom.isEmpty());
-                assertFalse(allByPresenceFrom.contains(worker));
-                assertTrue(allByPresenceFrom.contains(secondWorker));
-            }
-
-            @Test
-            void shouldFetchWorkerListByAbsenceFrom() {
-                //Given
-                worker.setAbsenceFrom(LocalDate.of(2024, 9, 1));
-                secondWorker.setAbsenceFrom(LocalDate.parse("2024-09-02"));
-                workerRepository.save(worker);
-                workerRepository.save(secondWorker);
-                //When
-                List<Worker> allByAbsenceFrom1 = workerRepository.findAllByAbsenceFrom(
-                        LocalDate.of(2024, 9, 1)
-                );
-                List<Worker> allByAbsenceFrom2 = workerRepository.findAllByAbsenceFrom(
-                        LocalDate.parse("2024-09-02")
-                );
-                //Then
-                assertFalse(allByAbsenceFrom1.isEmpty());
-                assertFalse(allByAbsenceFrom2.isEmpty());
-                assertEquals(1, allByAbsenceFrom1.size());
-                assertEquals(1, allByAbsenceFrom2.size());
             }
 
             @Test

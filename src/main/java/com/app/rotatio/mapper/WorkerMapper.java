@@ -29,8 +29,6 @@ public class WorkerMapper {
                 .firstName(workerDto.firstName())
                 .lastName(workerDto.lastname())
                 .status(WorkerStatus.fromValue(workerDto.status()))
-                .presenceFrom(workerDto.presenceFrom() != null ? workerDto.presenceFrom() : null)
-                .absenceFrom(workerDto.absenceFrom() != null ? workerDto.absenceFrom() : null)
                 .workingDay(workerDto.workingDayId() != null ?
                         workingDayService.getWorkingDayById(workerDto.workingDayId()) : null)
                 .task(workerDto.taskId() != null ?
@@ -47,8 +45,6 @@ public class WorkerMapper {
                 worker.getFirstName(),
                 worker.getLastName(),
                 worker.getStatus().getValue(),
-                worker.getPresenceFrom()  != null ? worker.getPresenceFrom() : null,
-                worker.getAbsenceFrom() != null ? worker.getAbsenceFrom() : null,
                 worker.getWorkingDay() != null ? worker.getWorkingDay().getId() : null,
                 worker.getTask() != null ? worker.getTask().getId() : null,
                 worker.getWorkplace() != null ? worker.getWorkplace().getId() : null

@@ -13,7 +13,5 @@ import java.util.List;
 public interface WorkerRepository extends JpaRepository<Worker, Long> {
 
     List<Worker> findAllByStatus(WorkerStatus status);
-    List<Worker> findAllByPresenceFromBefore(LocalDate presenceFrom);
-    List<Worker> findAllByAbsenceFrom(LocalDate absenceFrom);
     List<Worker> findAllByWorkingDay(WorkingDay workingDay);
 }

@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -35,12 +34,6 @@ public class Worker {
     @Column(name = "STATUS")
     private WorkerStatus status;
 
-    @Column(name = "PRESENCE_FROM")
-    private LocalDate presenceFrom;
-
-    @Column(name = "ABSENCE_FROM")
-    private LocalDate absenceFrom;
-
     @ManyToOne
     @JoinColumn(name = "WORKING_DAY_ID")
     private WorkingDay workingDay;
@@ -63,8 +56,6 @@ public class Worker {
         private String firstName;
         private String lastName;
         private WorkerStatus status;
-        private LocalDate presenceFrom;
-        private LocalDate absenceFrom;
         private WorkingDay workingDay;
         private Task task;
         private Workplace workplace;
@@ -94,16 +85,6 @@ public class Worker {
             return this;
         }
 
-        public Builder presenceFrom(LocalDate presenceFrom) {
-            this.presenceFrom = presenceFrom;
-            return this;
-        }
-
-        public Builder absenceFrom(LocalDate absenceFrom) {
-            this.absenceFrom = absenceFrom;
-            return this;
-        }
-
         public Builder workingDay(WorkingDay workingDay) {
             this.workingDay = workingDay;
             return this;
@@ -126,8 +107,6 @@ public class Worker {
             worker.firstName = this.firstName;
             worker.lastName = this.lastName;
             worker.status = this.status;
-            worker.presenceFrom = this.presenceFrom;
-            worker.absenceFrom = this.absenceFrom;
             worker.workingDay = this.workingDay;
             worker.task = this.task;
             worker.workplace = this.workplace;

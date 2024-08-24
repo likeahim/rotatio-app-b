@@ -37,27 +37,6 @@ public class WorkerController {
     }
 
     @SneakyThrows
-    @PatchMapping(value = "/updateStatus/{workerId}/{status}")
-    public ResponseEntity<WorkerDto> updateWorkerStatus(@PathVariable Long workerId, @PathVariable int status) {
-        Worker worker = workerService.updateStatus(workerId, status);
-        return ResponseEntity.ok(workerMapper.mapToWorkerDto(worker));
-    }
-
-    @SneakyThrows
-    @PatchMapping(value = "/updatePresence/{workerId}/{date}")
-    public ResponseEntity<WorkerDto> updatePresence(@PathVariable Long workerId, @PathVariable LocalDate date) {
-        Worker worker = workerService.updatePresenceFrom(workerId, date);
-        return ResponseEntity.ok(workerMapper.mapToWorkerDto(worker));
-    }
-
-    @SneakyThrows
-    @PatchMapping(value = "/updateAbsence/{workerId}/{date}")
-    public ResponseEntity<WorkerDto> updateAbsence(@PathVariable Long workerId, @PathVariable LocalDate date) {
-        Worker worker = workerService.updateAbsenceFrom(workerId, date);
-        return ResponseEntity.ok(workerMapper.mapToWorkerDto(worker));
-    }
-
-    @SneakyThrows
     @DeleteMapping(value = "{workerId}")
     public ResponseEntity<WorkerDto> deleteWorker(@PathVariable Long workerId) {
         Worker worker = workerService.deleteWorker(workerId);
@@ -82,21 +61,6 @@ public class WorkerController {
     public ResponseEntity<List<WorkerDto>> getWorkersByStatus(@PathVariable int statusValue) {
         List<Worker> workersByStatus = workerService.getWorkersByStatus(statusValue);
         return ResponseEntity.ok(workerMapper.mapToWorkerDtoList(workersByStatus));
-    }
-
-    @SneakyThrows
-    @GetMapping(value = "/byPresenceBefore/{date}")
-    public ResponseEntity<List<WorkerDto>> getWorkersByPresenceFrom(
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        List<Worker> workersByPresenceFrom = workerService.getWorkersByPresenceFromBefore(date);
-        return ResponseEntity.ok(workerMapper.mapToWorkerDtoList(workersByPresenceFrom));
-    }
-
-    @GetMapping(value = "/byAbsenceFrom/{date}")
-    public ResponseEntity<List<WorkerDto>> getWorkersByAbsenceFrom(
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        List<Worker> workersByPresenceTo = workerService.getWorkersByPresenceTo(date);
-        return ResponseEntity.ok(workerMapper.mapToWorkerDtoList(workersByPresenceTo));
     }
 
     @SneakyThrows

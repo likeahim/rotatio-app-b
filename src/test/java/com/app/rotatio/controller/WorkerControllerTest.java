@@ -51,8 +51,7 @@ public class WorkerControllerTest {
     @BeforeEach
     void setUp() throws JsonProcessingException {
         workerDto = new WorkerDto(
-                1L, 11L, "John", "Smith", 1, LocalDate.now(),
-                LocalDate.now(), 1L, 1L, 1L
+                1L, 11L, "John", "Smith", 1,1L, 1L, 1L
         );
         worker = Worker.builder()
                 .id(1L)
@@ -89,8 +88,7 @@ public class WorkerControllerTest {
         //Given
         worker.setFirstName("Mark");
         WorkerDto updated = workerDto = new WorkerDto(
-                1L, 11L, "Mark", "Smith", 1, null,
-                null, 1L, 1L, 1L
+                1L, 11L, "Mark", "Smith", 1, 1L, 1L, 1L
         );
         String updatedJson = mapper.writeValueAsString(updated);
         when(workerMapper.mapToWorker(workerDto)).thenReturn(worker);
@@ -106,23 +104,10 @@ public class WorkerControllerTest {
     }
 
     @Test
-    void shouldUpdateWorkerStatus() throws Exception {
-        //Given
-        when(workerService.updateStatus(anyLong(), anyInt())).thenReturn(worker);
-        when(workerMapper.mapToWorkerDto(any(Worker.class))).thenReturn(workerDto);
-        //When
-        //Then
-        mockMvc.perform(patch("/v1/rotatio/workers/updateStatus/1/2"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(1));
-    }
-
-    @Test
     void shouldDeleteWorker() throws Exception {
         //Given
         WorkerDto unemployed = new WorkerDto(
-                1L, 11L, "Mark", "Smith", 3, null,
-                null, 1L, 1L, 1L
+                1L, 11L, "Mark", "Smith", 3, 1L, 1L, 1L
         );
         when(workerService.deleteWorker(anyLong())).thenReturn(worker);
         when(workerMapper.mapToWorkerDto(any(Worker.class))).thenReturn(unemployed);
@@ -170,40 +155,9 @@ public class WorkerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].status").value(1))
                 .andExpect(jsonPath("$[0].workerNumber").value(11))
-                .andExpect(jsonPath("$[0].presenceFrom").value(date))
-                .andExpect(jsonPath("$[0].absenceFrom").value(date))
                 .andExpect(jsonPath("$[0].workingDayId").value(1))
                 .andExpect(jsonPath("$[0].taskId").value(1))
                 .andExpect(jsonPath("$[0].workplaceId").value(1));
-    }
-
-    @Test
-    void shouldGetWorkersByPresenceBefore() throws Exception {
-        //Given
-        when(workerService.getWorkersByPresenceFromBefore(any(LocalDate.class))).thenReturn(workers);
-        when(workerMapper.mapToWorkerDtoList(any())).thenReturn(workerDtos);
-        String date = LocalDate.now().toString();
-        String datePlusFive = LocalDate.now().plusDays(5).toString();
-        //When
-        //Then
-        mockMvc.perform(get("/v1/rotatio/workers/byPresenceBefore/" + datePlusFive))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].presenceFrom").value(date))
-                .andExpect(jsonPath("$[0].firstName").value("John"));
-    }
-
-    @Test
-    void shouldGetWorkersByAbsenceFrom() throws Exception {
-        //Given
-        when(workerService.getWorkersByPresenceTo(any(LocalDate.class))).thenReturn(workers);
-        when(workerMapper.mapToWorkerDtoList(any())).thenReturn(workerDtos);
-        String date = LocalDate.now().toString();
-        String datePlusFive = LocalDate.now().plusDays(5).toString();
-        //When
-        //Then
-        mockMvc.perform(get("/v1/rotatio/workers/byAbsenceFrom/" + datePlusFive))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].absenceFrom").value(date));
     }
 
     @Test

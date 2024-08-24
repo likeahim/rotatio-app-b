@@ -1,9 +1,7 @@
 package com.app.rotatio.service;
 
-import com.app.rotatio.controller.exception.TaskNotFoundException;
 import com.app.rotatio.controller.exception.WorkerNotFoundException;
 import com.app.rotatio.controller.exception.WorkingDayNotFoundException;
-import com.app.rotatio.controller.exception.WorkplaceNotFoundException;
 import com.app.rotatio.domain.*;
 import com.app.rotatio.repository.WorkerRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,28 +31,8 @@ public class WorkerService {
 
     public Worker deleteWorker(final Long id) throws WorkerNotFoundException {
         Worker worker = getWorkerById(id);
-        worker.setAbsenceFrom(LocalDate.now());
         worker.setStatus(WorkerStatus.UNEMPLOYED);
         return workerRepository.save(worker);
-    }
-
-    public Worker updateStatus(final Long id, final int statusValue) throws WorkerNotFoundException {
-        WorkerStatus status = WorkerStatus.fromValue(statusValue);
-        Worker workerById = getWorkerById(id);
-        workerById.setStatus(status);
-        return workerRepository.save(workerById);
-    }
-
-    public Worker updatePresenceFrom(Long id, LocalDate date) throws WorkerNotFoundException {
-        Worker workerById = getWorkerById(id);
-        workerById.setPresenceFrom(date);
-        return workerRepository.save(workerById);
-    }
-
-    public Worker updateAbsenceFrom(Long id, LocalDate date) throws WorkerNotFoundException {
-        Worker workerById = getWorkerById(id);
-        workerById.setAbsenceFrom(date);
-        return workerRepository.save(workerById);
     }
 
     public Worker getWorkerById(final Long id) throws WorkerNotFoundException {
@@ -68,14 +46,6 @@ public class WorkerService {
     public List<Worker> getWorkersByStatus(final int statusValue) {
         WorkerStatus status = WorkerStatus.fromValue(statusValue);
         return workerRepository.findAllByStatus(status);
-    }
-
-    public List<Worker> getWorkersByPresenceFromBefore(final LocalDate from) {
-        return workerRepository.findAllByPresenceFromBefore(from);
-    }
-
-    public List<Worker> getWorkersByPresenceTo(final LocalDate to) {
-        return workerRepository.findAllByAbsenceFrom(to);
     }
 
     public List<Worker> getWorkersByWorkingDay(final Long workingDayId) throws WorkingDayNotFoundException {

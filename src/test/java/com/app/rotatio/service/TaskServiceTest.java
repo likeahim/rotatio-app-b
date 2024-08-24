@@ -49,15 +49,19 @@ class TaskServiceTest {
         verify(taskRepository, times(1)).save(task);
     }
 
-//    @Test
-//    void shouldThrowTaskAlreadyExistsExceptionWhenTaskExists() {
-//        //Given
-//        when(taskRepository.findAll()).thenReturn(List.of(task));
-//        //When
-//        //Then
-//        assertThrows(TaskAlreadyExistsException.class, () -> taskService.saveTask(task));
-//        verify(taskRepository, never()).save(any(Task.class));
-//    }
+    @Test
+    void shouldThrowTaskAlreadyExistsExceptionWhenTaskExists() {
+        //Given
+        Task secondTask = Task.builder()
+                        .id(2L)
+                                .name(task.getName())
+                                        .build();
+        when(taskRepository.findAll()).thenReturn(List.of(task));
+        when(taskService.getAllTasks()).thenReturn(List.of(task));        //When
+        //Then
+        assertThrows(TaskAlreadyExistsException.class, () -> taskService.saveTask(secondTask));
+        verify(taskRepository, never()).save(any(Task.class));
+    }
 
     @Test
     void shouldDeleteTaskSuccessfully() throws TaskNotFoundException {
