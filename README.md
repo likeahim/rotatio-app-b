@@ -1,4 +1,4 @@
-# ROTATIO REST API
+# ROTATIO REST Api
 
 ## Opis
 Jest to backendowa część aplikacji odpowiedzialna za dostarczanie danych poprzez REST API.
