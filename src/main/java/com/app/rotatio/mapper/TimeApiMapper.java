@@ -6,7 +6,6 @@ import com.app.rotatio.domain.dto.time.TimeApiCurrentDto;
 import com.app.rotatio.domain.dto.time.TimeApiZonesDto;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

@@ -2,7 +2,6 @@ package com.app.rotatio.service;
 
 import com.app.rotatio.api.time.client.TimeApiClient;
 import com.app.rotatio.domain.TimeApiCurrent;
-import com.app.rotatio.domain.TimeApiZones;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

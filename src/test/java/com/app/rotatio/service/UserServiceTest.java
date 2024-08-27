@@ -176,9 +176,8 @@ class UserServiceTest {
     @Test
     void shouldRestorePasswordByUserMail() throws UserNotFoundException {
         //Given
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         //When
-        userService.restorePasswordByUserMail(1L);
+        userService.restorePasswordByUserMail(backendlessUser.getEmail());
         //Then
         verify(backendlessService, times(1)).restorePassword("test@example.com");
     }

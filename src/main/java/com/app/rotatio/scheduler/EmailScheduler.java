@@ -24,7 +24,7 @@ public class EmailScheduler {
     private final UserRepository userRepository;
     private final EmailService emailService;
 
-    @Scheduled(cron = "0 1 20 * * *")
+    @Scheduled(cron = "0 27 19 * * *")
     public void sendInformationEmail() {
         long size = userRepository.findAll().stream()
                 .filter(u -> u.getUserStatus().equals("ENABLED"))
@@ -39,7 +39,7 @@ public class EmailScheduler {
         emailService.send(mail);
     }
 
-    @Scheduled(cron = "0 0 20 * * *")
+    @Scheduled(cron = "0 29 19 * * *")
     @Transactional
     public void sentEmailToAllUsers() {
         List<User> all = userRepository.findAll();

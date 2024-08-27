@@ -94,4 +94,9 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleUnplannedWorkingDayArchiveProcessException(UnplannedWorkingDayArchiveProcessException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(PdfConcerterException.class)
+    public ResponseEntity<Object> handlePdfConverterException(PdfConcerterException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
 }

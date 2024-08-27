@@ -1,8 +1,6 @@
 package com.app.rotatio.controller;
 
-import com.app.rotatio.domain.TimeApiCurrent;
 import com.app.rotatio.domain.dto.time.TimeApiCurrentDto;
-import com.app.rotatio.domain.dto.time.TimeApiZonesDto;
 import com.app.rotatio.mapper.TimeApiMapper;
 import com.app.rotatio.service.TimeApiService;
 import lombok.RequiredArgsConstructor;

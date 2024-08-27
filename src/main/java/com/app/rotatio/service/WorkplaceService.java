@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -35,10 +34,14 @@ public class WorkplaceService {
     }
 
     public List<Workplace> getAllByActive(final boolean active) {
-        return workplaceRepository.findByActive(active);
+        return workplaceRepository.findByActive(active).stream()
+                .filter(Workplace::isNowUsed)
+                .toList();
     }
 
     public List<Workplace> getAllByNowUsed(final boolean nowUsed) {
-        return workplaceRepository.findByNowUsed(nowUsed);
+        return workplaceRepository.findByNowUsed(nowUsed).stream()
+                .filter(Workplace::isActive)
+                .toList();
     }
 }

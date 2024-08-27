@@ -1,9 +1,7 @@
 package com.app.rotatio.mapper;
 
-import com.app.rotatio.domain.BackendlessLoginUser;
 import com.app.rotatio.domain.BackendlessUser;
 import com.app.rotatio.domain.User;
-import com.app.rotatio.domain.dto.backendless.BackendlessLoginUserDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,19 +34,5 @@ public class BackendlessMapper {
                 .userToken(user.getUserToken() != null ? user.getUserToken() : null)
                 .userStatus(user.getUserStatus())
                 .build();
-    }
-
-    public BackendlessLoginUser mapToLoginUser(BackendlessLoginUserDto userDto) {
-        return BackendlessLoginUser.builder()
-                .login(userDto.login())
-                .password(userDto.password())
-                .build();
-    }
-
-    public BackendlessLoginUserDto mapToLoginUserDto(BackendlessLoginUser loginUser) {
-        return new BackendlessLoginUserDto(
-                loginUser.getLogin(),
-                loginUser.getPassword()
-        );
     }
 }

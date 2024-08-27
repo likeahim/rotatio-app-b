@@ -2,6 +2,7 @@ package com.app.rotatio.service;
 
 import com.app.rotatio.api.time.client.TimeApiClient;
 import com.app.rotatio.domain.TimeApiCurrent;
+import com.app.rotatio.domain.TimeApiZones;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,13 @@ class TimeApiServiceTest {
     @Test
     void shouldReturnAvailableZones() {
         //Given
-        List<String> zones = List.of("Europe/Warsaw", "America/New_York", "Asia/Tokyo");
+        TimeApiZones europeWarsaw = TimeApiZones.builder()
+                .zone("Europe/Warsaw").build();
+        TimeApiZones americaNY = TimeApiZones.builder()
+                .zone("America/New_York").build();
+        TimeApiZones asiaTokyo = TimeApiZones.builder()
+                .zone("Asia/Tokyo").build();
+        List<String> zones = List.of(europeWarsaw.getZone(), americaNY.getZone(), asiaTokyo.getZone());
         when(client.getZones()).thenReturn(zones);
         //When
         List<String> result = timeApiService.getAvailableZones();

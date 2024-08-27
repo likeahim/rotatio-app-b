@@ -4,8 +4,8 @@ import com.app.rotatio.domain.BackendlessLoginUser;
 import com.app.rotatio.domain.User;
 import com.app.rotatio.domain.dto.UserDto;
 import com.app.rotatio.domain.dto.backendless.BackendlessLoginUserDto;
+import com.app.rotatio.facade.UserFacade;
 import com.app.rotatio.mapper.UserMapper;
-import com.app.rotatio.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.MediaType;
@@ -21,22 +21,22 @@ import java.util.List;
 @CrossOrigin("*")
 public class UserController {
 
-    private final UserService userService;
+    private final UserFacade userFacade;
     private final UserMapper mapper;
 
     @SneakyThrows
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> register(@Validated @RequestBody UserDto userDto) {
         User user = mapper.mapToUser(userDto);
-        User registeredUser = userService.registerAndSaveUser(user);
+        User registeredUser = userFacade.registerAndSaveUser(user);
         return ResponseEntity.ok(mapper.mapToUserDto(registeredUser));
     }
 
     @SneakyThrows
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> login(@Validated @RequestBody BackendlessLoginUserDto userDto) {
-        BackendlessLoginUser backendlessLoginUser = userService.mapToBackendlessUser(userDto);
-        User user = userService.logAndSaveUser(backendlessLoginUser);
+        BackendlessLoginUser backendlessLoginUser = userFacade.mapToBackendlessUser(userDto);
+        User user = userFacade.loginUser(backendlessLoginUser);
         return ResponseEntity.ok(mapper.mapToUserDto(user));
     }
 
@@ -44,40 +44,47 @@ public class UserController {
     @PutMapping
     public ResponseEntity<UserDto> update(@Validated @RequestBody UserDto userDto) {
         User user = mapper.mapToUser(userDto);
-        User updated = userService.updateUser(user);
+        User updated = userFacade.updateUser(user);
         return ResponseEntity.ok(mapper.mapToUserDto(updated));
     }
 
     @SneakyThrows
     @DeleteMapping(value = "{objectId}")
     public ResponseEntity<Object> delete(@PathVariable String objectId) {
-        return ResponseEntity.ok(mapper.mapToUserDto(userService.delete(objectId)));
+        return ResponseEntity.ok(mapper.mapToUserDto(userFacade.deleteUser(objectId)));
     }
 
     @GetMapping
     public ResponseEntity<List<UserDto>> getAll() {
-        List<User> allUsers = userService.getAllUsers();
+        List<User> allUsers = userFacade.getAllUsers();
         return ResponseEntity.ok(mapper.mapToUserDtoList(allUsers));
     }
 
     @SneakyThrows
     @GetMapping(value = "/logout/{userId}")
     public ResponseEntity<Void> logout(@PathVariable Long userId) {
-        userService.logout(userId);
+        userFacade.logout(userId);
         return ResponseEntity.ok().build();
     }
 
     @SneakyThrows
-    @GetMapping(value = "/password/{userId}")
-    public ResponseEntity<Void> restorePassword(@PathVariable Long userId) {
-        userService.restorePasswordByUserMail(userId);
+    @GetMapping(value = "/password")
+    public ResponseEntity<Void> restorePassword(@RequestParam String email) {
+        userFacade.restorePasswordByUserMail(email);
         return ResponseEntity.ok().build();
     }
 
     @SneakyThrows
     @GetMapping(value = "/{userId}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
-        User user = userService.getUserById(userId);
+    public ResponseEntity<UserDto> getUser(@Validated @PathVariable Long userId) {
+        User user = userFacade.getUserById(userId);
         return ResponseEntity.ok(mapper.mapToUserDto(user));
+    }
+
+    @SneakyThrows
+    @GetMapping(value = "/byEmail/{email}")
+    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email) {
+        User userByEmail = userFacade.fetchUserByEmail(email);
+        return ResponseEntity.ok(mapper.mapToUserDto(userByEmail));
     }
 }

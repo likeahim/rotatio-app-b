@@ -7,7 +7,6 @@ import com.app.rotatio.domain.BackendlessUser;
 import com.app.rotatio.domain.User;
 import com.app.rotatio.domain.dto.backendless.BackendlessLoginUserDto;
 import com.app.rotatio.mapper.BackendlessMapper;
-import com.app.rotatio.mapper.UserMapper;
 import com.app.rotatio.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +58,7 @@ public class UserService {
     }
 
     public BackendlessLoginUser mapToBackendlessUser(final BackendlessLoginUserDto userDto) {
-        return mapper.mapToLoginUser(userDto);
+        return backendlessService.mapToLoginUser(userDto);
     }
 
     public void logout(final Long id) throws UserNotFoundException {
@@ -70,13 +69,16 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void restorePasswordByUserMail(final Long id) throws UserNotFoundException {
-        User userByEmail = getUserById(id);
-        backendlessService.restorePassword(userByEmail.getEmail());
+    public void restorePasswordByUserMail(final String email) throws UserNotFoundException {
+        backendlessService.restorePassword(email);
     }
 
     public User getUserByEmail(final String email) throws UserNotFoundException {
-        return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        try {
+            return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        } catch (Exception e) {
+            throw new UserNotFoundException();
+        }
     }
 
     public User updateUser(final User user) throws UserNotFoundException {

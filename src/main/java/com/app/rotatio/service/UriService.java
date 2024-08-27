@@ -1,6 +1,5 @@
 package com.app.rotatio.service;
 
-import com.app.rotatio.api.backendless.config.BackendlessConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

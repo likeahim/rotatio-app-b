@@ -4,6 +4,7 @@ import com.app.rotatio.api.backendless.client.BackendlessClient;
 import com.app.rotatio.controller.exception.UserLoginProcessException;
 import com.app.rotatio.domain.BackendlessLoginUser;
 import com.app.rotatio.domain.BackendlessUser;
+import com.app.rotatio.domain.dto.backendless.BackendlessLoginUserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -50,4 +51,10 @@ public class BackendlessService {
     }
 
 
+    public BackendlessLoginUser mapToLoginUser(BackendlessLoginUserDto userDto) {
+        return BackendlessLoginUser.builder()
+                .login(userDto.login())
+                .password(userDto.password())
+                .build();
+    }
 }

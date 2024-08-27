@@ -3,7 +3,6 @@ package com.app.rotatio.service;
 import com.app.rotatio.config.AdminConfig;
 import com.app.rotatio.domain.Mail;
 import com.app.rotatio.domain.User;
-import com.app.rotatio.domain.Worker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
@@ -11,7 +10,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 @Slf4j

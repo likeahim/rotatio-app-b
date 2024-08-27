@@ -1,9 +1,6 @@
 package com.app.rotatio.domain.dto;
 
-import com.app.rotatio.domain.WorkerStatus;
-
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.util.Objects;
 
 public record WorkerDto(

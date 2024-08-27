@@ -32,18 +32,6 @@ public class WorkingDayService {
         }
     }
 
-//    public WorkingDay cloneAndSaveWorkingDay(final Long id) throws WorkingDayNotFoundException, WorkingDayAlreadyArchivedException {
-//        WorkingDay toClone = getWorkingDayById(id);
-//        if (!toClone.isArchived()) {
-//            toClone.setArchived(true);
-//            WorkingDay cloned = toClone.clone();
-//
-//            return saveWorkingDay(cloned);
-//        } else {
-//            throw new WorkingDayAlreadyArchivedException();
-//        }
-//    }
-
     public void deleteById(final Long id) {
         workingDayRepository.deleteById(id);
     }

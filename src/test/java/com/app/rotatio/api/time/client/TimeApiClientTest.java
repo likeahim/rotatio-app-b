@@ -37,13 +37,14 @@ class TimeApiClientTest {
     @InjectMocks
     private TimeApiClient timeApiClient;
 
-    private URI zonesUri;
-    private URI currentTimeUri;
+    @Mock
+    private TimeApiConfig timeApiConfig;
+
+    private URI zonesUri = URI.create("http://example.pl");
+    private URI currentTimeUri = URI.create("http://example.pl");
 
     @BeforeEach
     void setUp() {
-        zonesUri = URI.create("http://timeapi.com/api/timezone");
-        currentTimeUri = URI.create("http://timeapi.com/api/timezone/Europe/Warsaw");
     }
 
     @Test
