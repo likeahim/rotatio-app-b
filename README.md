@@ -23,7 +23,7 @@ Aby uruchomić test, użyj polecenia:
 `./gradlew test`
 
 ## Powiązane projekty
-Aby uzyskać dostęp do frontendu tej aplikacji opartego na Vaadin, odwiedź: https://github.com/likeahim/rotatio-app-f
+Aby uzyskać dostęp do frontendu tej aplikacji opartego na Vaadin, uruchom również repozytorium: https://github.com/likeahim/rotatio-app-f
 
 ## Licencja
 Ten projekt jest licencjonowany na zasadach MIT. Szczegóły znajdują się w pliku LICENSE.
