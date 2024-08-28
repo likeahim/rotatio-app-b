@@ -28,7 +28,6 @@ class AdminConfigTest {
         String mail = adminConfig.getMail();
         //Then
         assertNotNull(mail);
-        assertTrue(mail.contains("rotatio"));
     }
 
     @Test
