@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @SneakyThrows
-    @DeleteMapping(value = "{objectId}")
+    @DeleteMapping(value = "/{objectId}")
     public ResponseEntity<Object> delete(@PathVariable String objectId) {
         return ResponseEntity.ok(mapper.mapToUserDto(userFacade.deleteUser(objectId)));
     }
